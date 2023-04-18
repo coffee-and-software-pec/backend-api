@@ -22,7 +22,7 @@ public class HelloController {
 
     @GetMapping
     public ResponseEntity<?> getHelloMessage() {
-        Message message = new Message("Hello, World!");
+        Message message = new Message("Hello, World!!");
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
