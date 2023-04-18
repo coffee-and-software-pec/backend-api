@@ -40,8 +40,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: artifact
-        path: build/libs/api-0.0.1-SNAPSHOT.jar
-        build-root-directory: api
+        path: api/build/libs/api-0.0.1-SNAPSHOT.jar
 
   deploy:
     needs: build
