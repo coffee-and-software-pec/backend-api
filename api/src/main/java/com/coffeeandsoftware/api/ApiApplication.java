@@ -1,4 +1,4 @@
-package com.coffeandsoftware.api;
+package com.coffeeandsoftware.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

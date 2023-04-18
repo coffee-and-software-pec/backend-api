@@ -1,4 +1,4 @@
-package com.coffeandsoftware.api;
+package com.coffeeandsoftware.api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
