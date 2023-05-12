@@ -20,5 +20,7 @@ public class Publication {
 
     private String text;
 
+    private User user;
+
     private LocalDateTime createdAt;
 }
