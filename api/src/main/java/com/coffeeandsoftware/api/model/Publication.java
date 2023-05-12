@@ -1,4 +1,4 @@
-package com.coffeeandsoftware.model;
+package com.coffeeandsoftware.api.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

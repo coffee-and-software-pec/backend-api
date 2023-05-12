@@ -1,8 +1,8 @@
-package com.coffeeandsoftware.controller;
+package com.coffeeandsoftware.api.controller;
 
 import java.time.LocalDateTime;
 
-import com.coffeeandsoftware.model.Publication;
+import com.coffeeandsoftware.api.model.Publication;
 
 public class PublicationController {
     public void savePublication(String text, LocalDateTime createdAt) {

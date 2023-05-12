@@ -5,15 +5,15 @@ import java.time.LocalDateTime;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.coffeeandsoftware.controller.PublicationController;
+import com.coffeeandsoftware.api.controller.PublicationController;
 
 @SpringBootApplication
 public class ApiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ApiApplication.class, args);
-		PublicationController controller = new PublicationController();
-		controller.savePublication("teste", LocalDateTime.now());
+//		PublicationController controller = new PublicationController();
+//		controller.savePublication("teste", LocalDateTime.now());
 	}
 
 }
