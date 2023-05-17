@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.coffeeandsoftware.controller.PublicationController;
+import com.coffeeandsoftware.api.controller.PublicationController;
 
 @SpringBootApplication
 @RestController
@@ -16,8 +16,8 @@ public class ApiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ApiApplication.class, args);
-		PublicationController controller = new PublicationController();
-		controller.savePublication("teste", LocalDateTime.now());
+//		PublicationController controller = new PublicationController();
+//		controller.savePublication("teste", LocalDateTime.now());
 	}
 
 	@GetMapping("/user")

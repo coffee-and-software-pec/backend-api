@@ -1,4 +1,4 @@
-package com.coffeeandsoftware.model;
+package com.coffeeandsoftware.api.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,6 +19,8 @@ public class Publication {
     private Long id;
 
     private String text;
+
+    private User user;
 
     private LocalDateTime createdAt;
 }
