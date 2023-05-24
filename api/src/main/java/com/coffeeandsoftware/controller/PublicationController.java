@@ -1,13 +1,14 @@
-package com.coffeeandsoftware.api.controller;
+package com.coffeeandsoftware.controller;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.coffeeandsoftware.api.model.Publication;
-import com.coffeeandsoftware.api.repositories.PublicationRepository;
-import com.coffeeandsoftware.api.services.UserService;
+import com.coffeeandsoftware.model.Publication;
+import com.coffeeandsoftware.repositories.PublicationRepository;
+import com.coffeeandsoftware.services.UserService;
+
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,9 +22,9 @@ public class PublicationController {
 
     public void savePublication(String text, LocalDateTime createdAt, String userId) {
         Publication newPublication = new Publication();
-        newPublication.setText(text);
-        newPublication.setCreatedAt(createdAt);
-        newPublication.setUser(userService.getUserById(UUID.fromString(userId)));
+        newPublication.setContinuous_text(text);
+        newPublication.setCreation_date(createdAt);
+        newPublication.setAuthor(userService.getUserById(UUID.fromString(userId)));
         newPublication = publicationRepository.save(newPublication);
     }
 }

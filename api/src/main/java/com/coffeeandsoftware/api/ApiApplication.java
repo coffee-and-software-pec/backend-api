@@ -8,8 +8,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.coffeeandsoftware.api.controller.PublicationController;
+import com.coffeeandsoftware.controller.PublicationController;
 
+@SuppressWarnings("unused")
 @SpringBootApplication
 @RestController
 public class ApiApplication {
@@ -19,11 +20,4 @@ public class ApiApplication {
 //		PublicationController controller = new PublicationController();
 //		controller.savePublication("teste", LocalDateTime.now());
 	}
-
-	@GetMapping("/user")
-	public Principal user(Principal p) {
-		System.out.println("username : " + p.getName());
-		return p;
-	}
-
 }
