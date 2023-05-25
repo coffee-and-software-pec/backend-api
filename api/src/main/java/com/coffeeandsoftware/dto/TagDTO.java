@@ -9,9 +9,4 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TagDTO {
     private String title;
-
-    public String getTitle() {
-        return title;
-    }
-
 }
