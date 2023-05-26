@@ -27,4 +27,6 @@ public class Publication {
     private User user;
 
     private LocalDateTime createdAt;
+
+    private ArrayList<String> tags;
 }
