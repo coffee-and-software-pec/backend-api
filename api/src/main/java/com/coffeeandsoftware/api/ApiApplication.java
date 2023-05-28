@@ -1,13 +1,18 @@
 package com.coffeeandsoftware.api;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.coffeeandsoftware.api.controller.PublicationController;
+import com.coffeeandsoftware.controller.PublicationController;
 
+@SuppressWarnings("unused")
 @SpringBootApplication
+@RestController
 public class ApiApplication {
 
 	public static void main(String[] args) {
@@ -15,5 +20,4 @@ public class ApiApplication {
 //		PublicationController controller = new PublicationController();
 //		controller.savePublication("teste", LocalDateTime.now());
 	}
-
 }
