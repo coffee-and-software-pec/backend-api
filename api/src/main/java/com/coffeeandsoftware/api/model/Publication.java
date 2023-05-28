@@ -1,4 +1,4 @@
-package com.coffeeandsoftware.model;
+package com.coffeeandsoftware.api.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +8,7 @@ import javax.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.*;
 
 @Entity
 @Table(name = "publication_i")
@@ -23,7 +23,7 @@ public class Publication {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    private Long p_id;
+    private UUID p_id;
 
     private String title;
     private String subtitle;
@@ -35,8 +35,8 @@ public class Publication {
     private LocalDateTime last_modification;
     private int visualizations;
 
-    @ManyToMany(mappedBy = "tagged_publication_i")
-    private ArrayList<Tag> tags;
+    @ManyToMany
+    private List<Tag> tags = new ArrayList<>();
 
     @ManyToOne
     private User author;

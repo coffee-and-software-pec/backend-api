@@ -1,8 +1,8 @@
-package com.coffeeandsoftware.services;
+package com.coffeeandsoftware.api.services;
 
-import com.coffeeandsoftware.dto.UserDTO;
-import com.coffeeandsoftware.model.User;
-import com.coffeeandsoftware.repositories.UserRepository;
+import com.coffeeandsoftware.api.dto.UserDTO;
+import com.coffeeandsoftware.api.model.User;
+import com.coffeeandsoftware.api.repositories.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

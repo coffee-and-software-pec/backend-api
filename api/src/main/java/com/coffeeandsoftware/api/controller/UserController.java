@@ -1,8 +1,8 @@
-package com.coffeeandsoftware.controller;
+package com.coffeeandsoftware.api.controller;
 
-import com.coffeeandsoftware.dto.UserDTO;
-import com.coffeeandsoftware.model.User;
-import com.coffeeandsoftware.services.UserService;
+import com.coffeeandsoftware.api.model.User;
+import com.coffeeandsoftware.api.dto.UserDTO;
+import com.coffeeandsoftware.api.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

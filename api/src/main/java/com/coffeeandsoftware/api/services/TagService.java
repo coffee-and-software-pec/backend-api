@@ -1,15 +1,15 @@
-package com.coffeeandsoftware.services;
+package com.coffeeandsoftware.api.services;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.coffeeandsoftware.api.model.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.coffeeandsoftware.dto.TagDTO;
-import com.coffeeandsoftware.model.Tag;
-import com.coffeeandsoftware.repositories.TagRepository;
+import com.coffeeandsoftware.api.dto.TagDTO;
+import com.coffeeandsoftware.api.repositories.TagRepository;
 
 @Service
 public class TagService {

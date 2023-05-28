@@ -1,8 +1,7 @@
-package com.coffeeandsoftware.repositories;
+package com.coffeeandsoftware.api.repositories;
 
+import com.coffeeandsoftware.api.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.coffeeandsoftware.model.User;
 
 import java.util.UUID;
 
