@@ -7,6 +7,8 @@ import javax.persistence.*;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import java.nio.charset.StandardCharsets;
+import java.sql.Blob;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -27,7 +29,11 @@ public class Publication {
 
     private String title;
     private String subtitle;
+
+    @Lob
+    @Column(columnDefinition = "text")
     private String continuous_text;
+
     private String main_img_url;
     private boolean is_private = true;
     private boolean is_draft = true;
@@ -40,6 +46,4 @@ public class Publication {
 
     @ManyToOne
     private User author;
-
-    
 }
