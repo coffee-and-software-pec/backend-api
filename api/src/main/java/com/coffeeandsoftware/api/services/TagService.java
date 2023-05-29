@@ -1,5 +1,6 @@
 package com.coffeeandsoftware.api.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,6 +24,25 @@ public class TagService {
         return tagRepo.save(t);
     }
 
+    public Tag createTagIfNotExists(TagDTO tagDTO) {
+        Optional<Tag> optionalTag = getTagByTitle(tagDTO.getTitle());
+        return optionalTag.orElseGet(() -> createTag(tagDTO));
+    }
+
+    public List<Tag> createTagsIfNotExists(List<TagDTO> tags) {
+        List<Tag> resultList = new ArrayList<>();
+
+        for (TagDTO tagDTO: tags) {
+            Optional<Tag> optionalTag = getTagByTitle(tagDTO.getTitle());
+            optionalTag.ifPresentOrElse(
+                    resultList::add,
+                    () -> resultList.add(createTag(tagDTO))
+            );
+        }
+
+        return resultList;
+    }
+
     public Tag getTagById(UUID id) {
         Tag t = null;
         Optional<Tag> optionalTag = tagRepo.findById(id);
@@ -32,6 +52,10 @@ public class TagService {
         }
 
         return t;
+    }
+
+    public Optional<Tag> getTagByTitle(String title) {
+        return tagRepo.findByTitle(title);
     }
 
     public List<Tag> getAllTags() {

@@ -35,7 +35,7 @@ public class Publication {
     private LocalDateTime last_modification;
     private int visualizations;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Tag> tags = new ArrayList<>();
 
     @ManyToOne

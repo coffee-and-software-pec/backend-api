@@ -27,5 +27,10 @@ public class Tag {
     )
     private UUID t_id;
 
+    @Column(unique = true)
     private String title;
+
+    public Tag(String title) {
+        this.title = title;
+    }
 }
