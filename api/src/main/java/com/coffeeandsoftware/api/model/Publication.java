@@ -17,7 +17,7 @@ import java.util.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Publication {
+public class Publication implements Comparable<Publication>{
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -46,4 +46,9 @@ public class Publication {
 
     @ManyToOne
     private User author;
+
+    @Override
+    public int compareTo(Publication arg0) {
+        return creation_date.compareTo(arg0.creation_date);
+    }
 }

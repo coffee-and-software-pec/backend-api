@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -141,5 +142,11 @@ public class PublicationService {
         }
 
         return publication;
+    }
+
+    public List<Publication> getAllPublicationsOrdered() {
+        List<Publication> all_publications = getAllPublications();
+        Collections.sort(all_publications);
+        return all_publications;        
     }
 }
