@@ -1,11 +1,10 @@
-package com.coffeeandsoftware.model;
+package com.coffeeandsoftware.api.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -28,5 +27,10 @@ public class Tag {
     )
     private UUID t_id;
 
+    @Column(unique = true)
     private String title;
+
+    public Tag(String title) {
+        this.title = title;
+    }
 }

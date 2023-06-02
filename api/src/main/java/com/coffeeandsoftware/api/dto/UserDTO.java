@@ -1,4 +1,4 @@
-package com.coffeeandsoftware.dto;
+package com.coffeeandsoftware.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
