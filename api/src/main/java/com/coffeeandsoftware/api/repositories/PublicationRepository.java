@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 public interface PublicationRepository extends JpaRepository<Publication, UUID> {
     List<Publication> findAllByAuthor(User user);
 //    List<Publication> findAllByTagsIn(Collection<List<Tag>> tags);

@@ -1,6 +1,5 @@
 package com.coffeeandsoftware.api.dto;
 
-import com.coffeeandsoftware.api.model.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
