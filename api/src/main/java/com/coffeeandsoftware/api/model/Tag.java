@@ -1,13 +1,8 @@
 package com.coffeeandsoftware.api.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
-
 import javax.persistence.*;
-
 import org.hibernate.annotations.GenericGenerator;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

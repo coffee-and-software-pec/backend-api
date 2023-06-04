@@ -2,7 +2,6 @@ package com.coffeeandsoftware.api.controller;
 
 import java.util.List;
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.coffeeandsoftware.api.dto.CommentDTO;
 import com.coffeeandsoftware.api.dto.CommentUpdateDTO;
 import com.coffeeandsoftware.api.dto.PublicationDTO;
@@ -21,7 +19,6 @@ import com.coffeeandsoftware.api.services.CommentService;
 import com.coffeeandsoftware.api.services.PublicationService;
 import com.coffeeandsoftware.api.services.UserService;
 import com.coffeeandsoftware.api.model.Comment;
-
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController

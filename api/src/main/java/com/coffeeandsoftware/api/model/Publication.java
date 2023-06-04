@@ -4,11 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
-
 import org.hibernate.annotations.GenericGenerator;
-
-import java.nio.charset.StandardCharsets;
-import java.sql.Blob;
 import java.time.LocalDateTime;
 import java.util.*;
 
