@@ -1,5 +1,7 @@
 package com.coffeeandsoftware.api.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import javax.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -24,6 +26,9 @@ public class Tag {
 
     @Column(unique = true)
     private String title;
+
+    @ManyToMany(mappedBy = "tags")
+    private List<Publication> publications = new ArrayList<>();
 
     public Tag(String title) {
         this.title = title;

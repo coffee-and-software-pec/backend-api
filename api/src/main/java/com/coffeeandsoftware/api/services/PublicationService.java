@@ -145,6 +145,6 @@ public class PublicationService {
     public List<Publication> getAllPublicationsOrdered() {
         List<Publication> all_publications = getAllPublications();
         Collections.sort(all_publications);
-        return all_publications;        
+        return all_publications;
     }
 }

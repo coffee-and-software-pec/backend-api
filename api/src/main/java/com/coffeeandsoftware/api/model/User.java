@@ -4,14 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user_i")
+@Table(
+    name = "user_i",
+    uniqueConstraints = {@UniqueConstraint(columnNames = "email")}
+)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,6 +31,8 @@ public class User {
     private UUID u_id;
 
     private String u_name;
+    
+    @Column(length=320)
     private String email;
     private String photoURL;
 }

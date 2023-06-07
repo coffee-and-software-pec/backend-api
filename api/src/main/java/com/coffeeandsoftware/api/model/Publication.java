@@ -38,10 +38,18 @@ public class Publication implements Comparable<Publication>{
     private int visualizations;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "tagged_publication_i",
+        joinColumns = @JoinColumn(name = "p_id"),
+        inverseJoinColumns = @JoinColumn(name = "t_id")
+    )
     private List<Tag> tags = new ArrayList<>();
 
     @ManyToOne
     private User author;
+
+    @OneToMany(mappedBy="r_publication")
+    private List<Reaction> reactions = new ArrayList<>();
 
     @Override
     public int compareTo(Publication arg0) {
