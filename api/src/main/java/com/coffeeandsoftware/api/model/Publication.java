@@ -11,6 +11,7 @@ import java.util.*;
 @Entity
 @Table(name = "publication_i")
 @Data
+@Embeddable
 @AllArgsConstructor
 @NoArgsConstructor
 public class Publication implements Comparable<Publication>{

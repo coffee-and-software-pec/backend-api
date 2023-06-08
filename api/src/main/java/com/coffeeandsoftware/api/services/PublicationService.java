@@ -2,8 +2,10 @@ package com.coffeeandsoftware.api.services;
 
 import com.coffeeandsoftware.api.dto.PublicationDTO;
 import com.coffeeandsoftware.api.dto.PublicationUpdateDTO;
+import com.coffeeandsoftware.api.dto.ReactionDTO;
 import com.coffeeandsoftware.api.dto.TagDTO;
 import com.coffeeandsoftware.api.model.Publication;
+import com.coffeeandsoftware.api.model.Reaction;
 import com.coffeeandsoftware.api.model.Tag;
 import com.coffeeandsoftware.api.model.User;
 import com.coffeeandsoftware.api.repositories.PublicationRepository;
@@ -27,6 +29,9 @@ public class PublicationService {
 
     @Autowired
     TagService tagService;
+
+    @Autowired
+    ReactionService reactionService;
 
     public Publication createPublication(PublicationDTO publicationDTO) {
         User author = userService.getUserById(UUID.fromString(publicationDTO.getAuthor_id()));
@@ -104,6 +109,16 @@ public class PublicationService {
         return publication;
     }
 
+    public boolean hasReacted(String publicationId, String userEmail) {
+        List<Reaction> all_reactions = reactionService.getAllReactions(publicationId);
+
+        for (Reaction r : all_reactions) {
+            if (r.getAuthor().getEmail().equals(userEmail)) {
+                return true;
+            }
+        } return false;
+    }
+
     public Publication insertTagAtPublication(String publicationId, TagDTO tagDTO) {
         Publication publication = null;
 
@@ -146,5 +161,22 @@ public class PublicationService {
         List<Publication> all_publications = getAllPublications();
         Collections.sort(all_publications);
         return all_publications;
+    }
+
+    public Publication react(String publicationId, String userEmail, ReactionDTO reactionDTO) {
+        Publication publication = null;
+
+        Optional<Publication> optionalPublication = publicationRepository.findById(UUID.fromString(publicationId));
+        if (optionalPublication.isPresent()) {
+            publication = optionalPublication.get();
+
+            List<Reaction> reactions = publication.getReactions();
+
+            Reaction reactionToAdd = reactionService.createReactionIfPossible(reactionDTO);
+            reactions.add(reactionToAdd);
+            publication.setReactions(reactions);
+            publicationRepository.save(publication);
+        }
+        return publication;
     }
 }

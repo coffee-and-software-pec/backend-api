@@ -1,7 +1,5 @@
 package com.coffeeandsoftware.api.dto;
 
-import java.util.UUID;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReactionDTO {
-    private UUID author_id;
+    private String authorEmail;
     private String publication_id;
     private String type;
 }
