@@ -38,7 +38,7 @@ public class CommentService {
 
     public Comment createComment(CommentDTO commentDTO) {
         User author = userService.getUserById(commentDTO.getAuthor_id());
-        Publication pub = pubService.getPublicationById(commentDTO.getPublication_id().toString());
+        Publication pub = pubService.getPublicationById(UUID.fromString(commentDTO.getPublication_id()));
         Comment parent = commentService.getCommentById(commentDTO.getC_id());
         LocalDateTime timeNow = LocalDateTime.now();
 

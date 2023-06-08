@@ -83,9 +83,9 @@ public class PublicationService {
 //        return publicationRepository.findAllByTags(tags.stream().map(TagDTO::getTitle).collect(Collectors.toList()));
     }
 
-    public Publication getPublicationById(String publicationId) {
+    public Publication getPublicationById(UUID publicationId) {
         Publication publication = null;
-        Optional<Publication> optionalPublication = publicationRepository.findById(UUID.fromString(publicationId));
+        Optional<Publication> optionalPublication = publicationRepository.findById(publicationId);
         if (optionalPublication.isPresent()) {
             publication = optionalPublication.get();
         }

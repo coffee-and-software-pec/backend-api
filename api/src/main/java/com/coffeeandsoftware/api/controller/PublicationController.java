@@ -1,6 +1,8 @@
 package com.coffeeandsoftware.api.controller;
 
 import java.util.List;
+import java.util.UUID;
+
 import com.coffeeandsoftware.api.dto.PublicationDTO;
 import com.coffeeandsoftware.api.dto.PublicationUpdateDTO;
 import com.coffeeandsoftware.api.dto.ReactionDTO;
@@ -43,7 +45,7 @@ public class PublicationController {
 
     @GetMapping("/{publicationId}")
     public ResponseEntity<?> getPublicationById(@PathVariable String publicationId) {
-        Publication publication = publicationService.getPublicationById(publicationId);
+        Publication publication = publicationService.getPublicationById(UUID.fromString(publicationId));
         return new ResponseEntity<>(publication, HttpStatus.OK);
     }
 

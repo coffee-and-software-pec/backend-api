@@ -9,5 +9,5 @@ import lombok.Data;
 @Data
 public class ReactionPK implements Serializable{
     private UUID userId;
-    private String publicationId;
+    private UUID publicationId;
 }

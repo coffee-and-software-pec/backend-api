@@ -3,6 +3,8 @@ package com.coffeeandsoftware.api.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.coffeeandsoftware.api.dto.ReactionDTO;
@@ -25,7 +27,7 @@ public class ReactionService {
 
     public Reaction createReaction(ReactionDTO reactionDTO) {
         User author = userService.getUserByEmail(reactionDTO.getAuthorEmail());
-        Publication publication = publicationService.getPublicationById(reactionDTO.getPublication_id().toString());
+        Publication publication = publicationService.getPublicationById(UUID.fromString(reactionDTO.getPublication_id()));
 
         Reaction newReaction = new Reaction();
         newReaction.setAuthor(author);
@@ -35,7 +37,7 @@ public class ReactionService {
     }
 
     public List<Reaction> getAllReactions(String publicationId) {
-        Publication pub = publicationService.getPublicationById(publicationId);
+        Publication pub = publicationService.getPublicationById(UUID.fromString(publicationId));
         return pub.getReactions();
     }
 
@@ -70,7 +72,7 @@ public class ReactionService {
         Reaction reaction = null;
 
         User u = userService.getUserByEmail(reactionDTO.getAuthorEmail());
-        Optional<Reaction> optionalReaction = reactionRepository.findByIds(u.getU_id().toString(),reactionDTO.getPublication_id());
+        Optional<Reaction> optionalReaction = reactionRepository.findByIds(u.getU_id(),UUID.fromString(reactionDTO.getPublication_id()));
         if (optionalReaction.isPresent()) {
             reaction = optionalReaction.get();
             reactionRepository.delete(reaction);
@@ -80,7 +82,7 @@ public class ReactionService {
 
     public Reaction createReactionIfPossible(ReactionDTO reactionDTO) {
         if (!hasReacted(reactionDTO.getAuthorEmail(), reactionDTO.getPublication_id())) {
-            Publication publication = publicationService.getPublicationById(reactionDTO.getPublication_id());
+            Publication publication = publicationService.getPublicationById(UUID.fromString(reactionDTO.getPublication_id()));
             User user = userService.getUserByEmail(reactionDTO.getAuthorEmail());
 
             Reaction reaction = new Reaction();
