@@ -3,11 +3,8 @@ package com.coffeeandsoftware.api.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import javax.persistence.*;
-
 import org.hibernate.annotations.GenericGenerator;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,6 +26,9 @@ public class Tag {
 
     @Column(unique = true)
     private String title;
+
+    @ManyToMany(mappedBy = "tags")
+    private List<Publication> publications = new ArrayList<>();
 
     public Tag(String title) {
         this.title = title;

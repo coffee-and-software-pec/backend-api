@@ -4,17 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
-
 import org.hibernate.annotations.GenericGenerator;
-
-import java.nio.charset.StandardCharsets;
-import java.sql.Blob;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
 @Table(name = "publication_i")
 @Data
+@Embeddable
 @AllArgsConstructor
 @NoArgsConstructor
 public class Publication implements Comparable<Publication>{
@@ -42,10 +39,18 @@ public class Publication implements Comparable<Publication>{
     private int visualizations;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "tagged_publication_i",
+        joinColumns = @JoinColumn(name = "p_id"),
+        inverseJoinColumns = @JoinColumn(name = "t_id")
+    )
     private List<Tag> tags = new ArrayList<>();
 
     @ManyToOne
     private User author;
+
+    @OneToMany(mappedBy="r_publication")
+    private List<Reaction> reactions = new ArrayList<>();
 
     @Override
     public int compareTo(Publication arg0) {

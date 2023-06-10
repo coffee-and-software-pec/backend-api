@@ -1,16 +1,13 @@
 package com.coffeeandsoftware.api.controller;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import com.coffeeandsoftware.api.dto.PublicationDTO;
 import com.coffeeandsoftware.api.dto.PublicationUpdateDTO;
+import com.coffeeandsoftware.api.dto.ReactionDTO;
 import com.coffeeandsoftware.api.dto.TagDTO;
 import com.coffeeandsoftware.api.model.Publication;
-import com.coffeeandsoftware.api.model.Tag;
-import com.coffeeandsoftware.api.repositories.PublicationRepository;
 import com.coffeeandsoftware.api.services.PublicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.coffeeandsoftware.api.services.UserService;
@@ -48,7 +45,7 @@ public class PublicationController {
 
     @GetMapping("/{publicationId}")
     public ResponseEntity<?> getPublicationById(@PathVariable String publicationId) {
-        Publication publication = publicationService.getPublicationById(publicationId);
+        Publication publication = publicationService.getPublicationById(UUID.fromString(publicationId));
         return new ResponseEntity<>(publication, HttpStatus.OK);
     }
 
@@ -57,6 +54,11 @@ public class PublicationController {
                                                    @RequestBody PublicationUpdateDTO publicationDTO) {
         Publication publication = publicationService.updatePublication(publicationId, publicationDTO);
         return new ResponseEntity<>(publication, HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> react(@PathVariable String publicationId, @RequestBody String userEmail, @RequestBody ReactionDTO reactionDTO) {
+        Publication publication = publicationService.react(publicationId, userEmail, reactionDTO);
+        return new ResponseEntity<>(publication, HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping("/{publicationId}/insertTag")

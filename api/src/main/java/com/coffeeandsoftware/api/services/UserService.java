@@ -3,10 +3,8 @@ package com.coffeeandsoftware.api.services;
 import com.coffeeandsoftware.api.dto.UserDTO;
 import com.coffeeandsoftware.api.model.User;
 import com.coffeeandsoftware.api.repositories.UserRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,6 +32,13 @@ public class UserService {
             user = optionalUser.get();
         }
 
+        return user;
+    }
+
+    public User getUserByEmail(String email) {
+        User user = null;
+        Optional<User> u = userRepository.findByEmail(email);
+        if (u.isPresent()) user = u.get();
         return user;
     }
 
