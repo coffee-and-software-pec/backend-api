@@ -2,10 +2,12 @@ package com.coffeeandsoftware.api.controller;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import com.coffeeandsoftware.api.dto.PublicationDTO;
 import com.coffeeandsoftware.api.dto.PublicationUpdateDTO;
 import com.coffeeandsoftware.api.dto.ReactionDTO;
+import com.coffeeandsoftware.api.dto.ReturnDTO.PublicationReturnDTO;
 import com.coffeeandsoftware.api.dto.TagDTO;
 import com.coffeeandsoftware.api.model.Publication;
 import com.coffeeandsoftware.api.services.PublicationService;
@@ -27,52 +29,72 @@ public class PublicationController {
 
     @PostMapping
     public ResponseEntity<?> createPublication(@RequestBody PublicationDTO publicationDTO) {
-        Publication publication = publicationService.createPublication(publicationDTO);
-        return new ResponseEntity<>(publication, HttpStatus.CREATED);
+        var publication = publicationService.createPublication(publicationDTO);
+        return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<?> getAllPublications() {
         List<Publication> publications = publicationService.getAllPublications();
-        return new ResponseEntity<>(publications, HttpStatus.OK);
+        return new ResponseEntity<>(
+                publications.stream().map(PublicationReturnDTO::new).collect(Collectors.toList()),
+                HttpStatus.OK);
+    }
+
+    @GetMapping("/landingPublications")
+    public ResponseEntity<?> getAllLandingPublications() {
+        List<Publication> publications = publicationService.getLandingPublicationsOrdered();
+        return new ResponseEntity<>(
+                publications.stream().map(PublicationReturnDTO::new).collect(Collectors.toList()),
+                HttpStatus.OK);
+    }
+
+    @GetMapping("/userPublications/{userId}")
+    public ResponseEntity<?> getAllUserPublications(@PathVariable String userId) {
+        List<Publication> publications = publicationService.getLandingPublicationsOrdered();
+        return new ResponseEntity<>(
+                publications.stream().map(PublicationReturnDTO::new).collect(Collectors.toList()),
+                HttpStatus.OK);
     }
 
     @GetMapping("/byTag")
     public ResponseEntity<?> getAllPublicationsByTags(@RequestBody List<TagDTO> tags) {
         List<Publication> publications = publicationService.getAllPublicationsByTags(tags);
-        return new ResponseEntity<>(publications, HttpStatus.OK);
+        return new ResponseEntity<>(
+                publications.stream().map(PublicationReturnDTO::new).collect(Collectors.toList()),
+                HttpStatus.OK);
     }
 
     @GetMapping("/{publicationId}")
     public ResponseEntity<?> getPublicationById(@PathVariable String publicationId) {
         Publication publication = publicationService.getPublicationById(UUID.fromString(publicationId));
-        return new ResponseEntity<>(publication, HttpStatus.OK);
+        return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.OK);
     }
 
     @PatchMapping("/{publicationId}")
     public ResponseEntity<?> updatePublicationById(@PathVariable String publicationId,
                                                    @RequestBody PublicationUpdateDTO publicationDTO) {
         Publication publication = publicationService.updatePublication(publicationId, publicationDTO);
-        return new ResponseEntity<>(publication, HttpStatus.OK);
+        return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.OK);
     }
 
     public ResponseEntity<?> react(@PathVariable String publicationId, @RequestBody String userEmail, @RequestBody ReactionDTO reactionDTO) {
         Publication publication = publicationService.react(publicationId, userEmail, reactionDTO);
-        return new ResponseEntity<>(publication, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping("/{publicationId}/insertTag")
     public ResponseEntity<?> insertTagAtPublication(@PathVariable String publicationId,
                                                     @RequestBody TagDTO tagDTO) {
         Publication publication = publicationService.insertTagAtPublication(publicationId, tagDTO);
-        return new ResponseEntity<>(publication, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping("/{publicationId}/removeTag")
     public ResponseEntity<?> removeTagAtPublication(@PathVariable String publicationId,
                                                     @RequestBody TagDTO tagDTO) {
         Publication publication = publicationService.removeTagAtPublication(publicationId, tagDTO);
-        return new ResponseEntity<>(publication, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.NO_CONTENT);
     }
 
 

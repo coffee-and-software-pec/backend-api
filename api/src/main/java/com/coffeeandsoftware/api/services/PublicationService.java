@@ -3,6 +3,7 @@ package com.coffeeandsoftware.api.services;
 import com.coffeeandsoftware.api.dto.PublicationDTO;
 import com.coffeeandsoftware.api.dto.PublicationUpdateDTO;
 import com.coffeeandsoftware.api.dto.ReactionDTO;
+import com.coffeeandsoftware.api.dto.ReturnDTO.PublicationReturnDTO;
 import com.coffeeandsoftware.api.dto.TagDTO;
 import com.coffeeandsoftware.api.model.Publication;
 import com.coffeeandsoftware.api.model.Reaction;
@@ -12,11 +13,8 @@ import com.coffeeandsoftware.api.repositories.PublicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PublicationService {
@@ -105,7 +103,6 @@ public class PublicationService {
             publication.setLast_modification(LocalDateTime.now());
             publicationRepository.save(publication);
         }
-
         return publication;
     }
 
@@ -161,6 +158,18 @@ public class PublicationService {
         List<Publication> all_publications = getAllPublications();
         Collections.sort(all_publications);
         return all_publications;
+    }
+
+    public List<Publication> getAllUserPublications(String userId) {
+        User user = userService.getUserById(UUID.fromString(userId));
+        return publicationRepository.findAllByAuthor(user);
+    }
+
+    public List<Publication> getLandingPublicationsOrdered() {
+        return getAllPublications().stream()
+                .sorted(Comparator.comparing(Publication::getCreation_date).reversed())
+                .limit(4)
+                .collect(Collectors.toList());
     }
 
     public Publication react(String publicationId, String userEmail, ReactionDTO reactionDTO) {

@@ -18,8 +18,12 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {
-        User user = userService.createUser(userDTO);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        try {
+            User user = userService.createUser(userDTO);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
     }
 
     @GetMapping
@@ -30,5 +34,10 @@ public class UserController {
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUserById(@PathVariable String userId) {
         return new ResponseEntity<>(userService.getUserById(UUID.fromString(userId)), HttpStatus.OK);
+    }
+
+    @GetMapping("/getByEmail/{email}")
+    public ResponseEntity<?> getUserByEmail(@PathVariable String email) {
+        return new ResponseEntity<>(userService.getUserByEmail(email), HttpStatus.OK);
     }
 }

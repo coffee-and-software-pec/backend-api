@@ -34,7 +34,7 @@ public class User {
 
     private String u_name;
     
-    @Column(length=320)
+    @Column(length=320, unique = true)
     private String email;
     private String photoURL;
 }

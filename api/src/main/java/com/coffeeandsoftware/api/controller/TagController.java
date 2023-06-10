@@ -1,5 +1,6 @@
 package com.coffeeandsoftware.api.controller;
 
+import com.coffeeandsoftware.api.dto.ReturnDTO.TagReturnDTO;
 import com.coffeeandsoftware.api.dto.TagDTO;
 import com.coffeeandsoftware.api.model.Tag;
 import com.coffeeandsoftware.api.services.TagService;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/tag")
@@ -19,7 +21,9 @@ public class TagController {
     @GetMapping
     public ResponseEntity<?> getAllTags() {
         List<Tag> tags = tagService.getAllTags();
-        return new ResponseEntity<>(tags, HttpStatus.OK);
+        List<TagReturnDTO> tagReturnDTOS = tags.stream().map(t -> new TagReturnDTO(t.getTitle()))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(tagReturnDTOS, HttpStatus.OK);
     }
 
     @PostMapping
