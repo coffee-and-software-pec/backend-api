@@ -64,17 +64,21 @@ public class PublicationService {
         List<Publication> filtered_publications = new ArrayList<Publication>() {};
         List<Publication> all_publications = publicationRepository.findAll();
 
-        for (Publication publication:all_publications){
-            Boolean have_tag = false;
-            for (Tag tag:publication.getTags()){
-                for (TagDTO wanted_tag:tags){
-                    if (tag.getTitle().equals(wanted_tag.getTitle())) {
-                        have_tag = true;
-                        break;
+        if (tags.size() > 0) {
+            for (Publication publication:all_publications){
+                Boolean have_tag = false;
+                for (Tag tag:publication.getTags()){
+                    for (TagDTO wanted_tag:tags){
+                        if (tag.getTitle().equals(wanted_tag.getTitle())) {
+                            have_tag = true;
+                            break;
+                        }
                     }
                 }
+                if (have_tag) filtered_publications.add(publication);
             }
-            if (have_tag) filtered_publications.add(publication);
+        } else {
+            filtered_publications = all_publications;
         }
 
         return filtered_publications;
