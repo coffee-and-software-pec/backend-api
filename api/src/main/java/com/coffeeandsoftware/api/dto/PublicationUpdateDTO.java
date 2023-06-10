@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,4 +14,5 @@ public class PublicationUpdateDTO {
     private String subtitle;
     private String continuous_text;
     private String main_img_url;
+    private List<TagDTO> tagList;
 }

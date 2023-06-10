@@ -58,8 +58,9 @@ public class PublicationController {
     }
 
     @GetMapping("/byTag")
-    public ResponseEntity<?> getAllPublicationsByTags(@RequestBody List<TagDTO> tags) {
-        List<Publication> publications = publicationService.getAllPublicationsByTags(tags);
+    public ResponseEntity<?> getAllPublicationsByTags(@RequestParam List<String> tags) {
+        List<TagDTO> tagDTOS = tags.stream().map(TagDTO::new).collect(Collectors.toList());
+        List<Publication> publications = publicationService.getAllPublicationsByTags(tagDTOS);
         return new ResponseEntity<>(
                 publications.stream().map(PublicationReturnDTO::new).collect(Collectors.toList()),
                 HttpStatus.OK);

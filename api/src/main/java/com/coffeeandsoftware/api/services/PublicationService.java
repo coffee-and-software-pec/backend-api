@@ -101,6 +101,11 @@ public class PublicationService {
             publication.setContinuous_text(publicationDTO.getContinuous_text());
             publication.setMain_img_url(publicationDTO.getMain_img_url());
             publication.setLast_modification(LocalDateTime.now());
+
+            if (publicationDTO.getTagList() != null && publicationDTO.getTagList().size() > 0) {
+                List<Tag> tags = tagService.createTagsIfNotExists(publicationDTO.getTagList());
+                publication.setTags(tags);
+            }
             publicationRepository.save(publication);
         }
         return publication;
