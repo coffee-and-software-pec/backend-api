@@ -36,6 +36,10 @@ jobs:
       with:
         arguments: build
         build-root-directory: api
+      env:
+        POSTGRES_URL: {{ secrets.POSTGRES_URL }}
+        POSTGRES_USERNAME: {{ secrets.POSTGRES_USERNAME }}
+        POSTGRES_PASSWORD: {{ secrets.POSTGRES_PASSWORD }}
     - name: Upload JAR
       uses: actions/upload-artifact@v2
       with:
