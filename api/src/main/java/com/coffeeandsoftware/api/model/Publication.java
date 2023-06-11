@@ -52,6 +52,9 @@ public class Publication implements Comparable<Publication>{
     @OneToMany(mappedBy="r_publication")
     private List<Reaction> reactions = new ArrayList<>();
 
+    @OneToMany(mappedBy="publication")
+    private List<Comment> comments = new ArrayList<>();
+
     @Override
     public int compareTo(Publication arg0) {
         return creation_date.compareTo(arg0.creation_date);

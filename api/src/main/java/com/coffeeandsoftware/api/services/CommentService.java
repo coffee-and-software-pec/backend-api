@@ -37,9 +37,12 @@ public class CommentService {
     CommentService commentService;
 
     public Comment createComment(CommentDTO commentDTO) {
-        User author = userService.getUserById(commentDTO.getAuthor_id());
+        User author = userService.getUserById(UUID.fromString(commentDTO.getAuthor_id()));
         Publication pub = pubService.getPublicationById(UUID.fromString(commentDTO.getPublication_id()));
-        Comment parent = commentService.getCommentById(commentDTO.getC_id());
+        Comment parent = null;
+        if (commentDTO.getC_parent_id() != null) {
+            parent = commentService.getCommentById(UUID.fromString(commentDTO.getC_parent_id()));
+        }
         LocalDateTime timeNow = LocalDateTime.now();
 
         Comment newComment = new Comment();
@@ -62,6 +65,11 @@ public class CommentService {
                 filtered_comments.add(comment);
             }
         } return filtered_comments;
+    }
+
+    public List<Comment> getAllCommentsByPublication(String publicationId) {
+        Publication publication = pubService.getPublicationById(UUID.fromString(publicationId));
+        return commentRepository.findAllByPublication(publication);
     }
 
     public List<Comment> getAllCommentsByAuthor(UserDTO author) {

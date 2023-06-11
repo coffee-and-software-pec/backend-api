@@ -48,6 +48,6 @@ public class PublicationReturnDTO {
                 .collect(Collectors.toList());
         this.author = publication.getAuthor();
         this.heartsCount = publication.getReactions().size();
-        this.commentsCount = 0;
+        this.commentsCount = publication.getComments().size();
     }
 }
