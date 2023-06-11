@@ -181,7 +181,7 @@ public class PublicationService {
                 .collect(Collectors.toList());
     }
 
-    public Publication react(String publicationId, String userEmail, ReactionDTO reactionDTO) {
+    public Publication react(String publicationId, ReactionDTO reactionDTO) {
         Publication publication = null;
 
         Optional<Publication> optionalPublication = publicationRepository.findById(UUID.fromString(publicationId));
@@ -190,11 +190,54 @@ public class PublicationService {
 
             List<Reaction> reactions = publication.getReactions();
 
-            Reaction reactionToAdd = reactionService.createReactionIfPossible(reactionDTO);
-            reactions.add(reactionToAdd);
-            publication.setReactions(reactions);
-            publicationRepository.save(publication);
+            Reaction reactionToAdd = reactionService.createReactionIfPossible(publicationId, reactionDTO);
+            if (reactionToAdd != null) {
+                reactions.add(reactionToAdd);
+                publication.setReactions(reactions);
+                publicationRepository.save(publication);
+            }
         }
         return publication;
+    }
+
+    public Publication unReact(String publicationId, ReactionDTO reactionDTO) {
+        Publication publication = null;
+
+        Optional<Publication> optionalPublication = publicationRepository.findById(UUID.fromString(publicationId));
+        if (optionalPublication.isPresent()) {
+            publication = optionalPublication.get();
+
+            List<Reaction> reactions = publication.getReactions();
+
+            Reaction reactionToRemove = reactionService.removeReaction(publicationId, reactionDTO);
+            if (reactionToRemove != null) {
+                reactions.remove(reactionToRemove);
+                publication.setReactions(reactions);
+                publicationRepository.save(publication);
+            }
+        }
+        return publication;
+    }
+
+    public boolean hasReacted(String publicationId, ReactionDTO reactionDTO) {
+        return reactionService.hasReacted(reactionDTO.getAuthorEmail(), publicationId);
+    }
+
+    public List<Publication> getAllUserPublicationsByTags(String userId, List<TagDTO> tags) {
+        List<Publication> all_publications = getAllUserPublications(userId);
+        List<String> tagsTitle = tags.stream().map(TagDTO::getTitle).collect(Collectors.toList());
+
+        if (tags.size() > 0) {
+            return all_publications.stream()
+                    .filter(p ->
+                            new HashSet<>(p.getTags().stream()
+                                    .map(Tag::getTitle)
+                                    .collect(Collectors.toList()))
+                            .containsAll(tagsTitle)
+                    )
+                    .collect(Collectors.toList());
+        } else {
+            return all_publications;
+        }
     }
 }

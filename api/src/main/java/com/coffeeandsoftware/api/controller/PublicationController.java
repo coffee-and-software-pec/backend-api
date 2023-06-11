@@ -51,7 +51,16 @@ public class PublicationController {
 
     @GetMapping("/userPublications/{userId}")
     public ResponseEntity<?> getAllUserPublications(@PathVariable String userId) {
-        List<Publication> publications = publicationService.getLandingPublicationsOrdered();
+        List<Publication> publications = publicationService.getAllUserPublications(userId);
+        return new ResponseEntity<>(
+                publications.stream().map(PublicationReturnDTO::new).collect(Collectors.toList()),
+                HttpStatus.OK);
+    }
+
+    @GetMapping("/userPublications/{userId}/byTags")
+    public ResponseEntity<?> getAllUserPublicationsByTags(@PathVariable String userId, @RequestParam List<String> tags) {
+        List<TagDTO> tagDTOS = tags.stream().map(TagDTO::new).collect(Collectors.toList());
+        List<Publication> publications = publicationService.getAllUserPublicationsByTags(userId, tagDTOS);
         return new ResponseEntity<>(
                 publications.stream().map(PublicationReturnDTO::new).collect(Collectors.toList()),
                 HttpStatus.OK);
@@ -79,9 +88,22 @@ public class PublicationController {
         return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> react(@PathVariable String publicationId, @RequestBody String userEmail, @RequestBody ReactionDTO reactionDTO) {
-        Publication publication = publicationService.react(publicationId, userEmail, reactionDTO);
+    @PostMapping("/{publicationId}/react")
+    public ResponseEntity<?> react(@PathVariable String publicationId, @RequestBody ReactionDTO reactionDTO) {
+        Publication publication = publicationService.react(publicationId, reactionDTO);
         return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.NO_CONTENT);
+    }
+
+    @PatchMapping("/{publicationId}/unreact")
+    public ResponseEntity<?> unReact(@PathVariable String publicationId, @RequestBody ReactionDTO reactionDTO) {
+        Publication publication = publicationService.unReact(publicationId, reactionDTO);
+        return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/{publicationId}/hasReacted")
+    public ResponseEntity<?> hasReacted(@PathVariable String publicationId, @RequestBody ReactionDTO reactionDTO) {
+        boolean hasReacted = publicationService.hasReacted(publicationId, reactionDTO);
+        return new ResponseEntity<>(hasReacted, HttpStatus.OK);
     }
 
     @PatchMapping("/{publicationId}/insertTag")

@@ -20,7 +20,7 @@ public class ReactionController {
 
     @PostMapping
     public ResponseEntity<?> createReaction(@RequestBody ReactionDTO reactionDTO) {
-        Reaction reaction = reactionService.createReaction(reactionDTO);
-        return new ResponseEntity<>(reaction, HttpStatus.OK);
+//        Reaction reaction = reactionService.createReaction(reactionDTO);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }

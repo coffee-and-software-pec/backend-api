@@ -9,6 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReactionDTO {
     private String authorEmail;
-    private String publication_id;
     private String type;
 }
