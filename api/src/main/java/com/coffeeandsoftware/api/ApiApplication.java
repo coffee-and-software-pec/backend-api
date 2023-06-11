@@ -22,7 +22,7 @@ public class ApiApplication {
 				registry
 						.addMapping("/**")
 						.allowedMethods("*")
-						.allowedOrigins("http://localhost:3000");
+						.allowedOrigins("http://localhost:3000","https://after-class-frontend.vercel.app");
 			}
 		};
 	}
