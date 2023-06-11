@@ -47,9 +47,6 @@ public class PublicationReturnDTO {
                 .map(t -> new TagReturnDTO(t.getTitle()))
                 .collect(Collectors.toList());
         this.author = publication.getAuthor();
-        this.reactions = publication.getReactions().stream()
-                .map(r -> new ReactionDTO(r.getAuthor().getEmail(), r.getR_type()))
-                .collect(Collectors.toList());
         this.heartsCount = publication.getReactions().size();
         this.commentsCount = 0;
     }
