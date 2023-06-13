@@ -1,10 +1,10 @@
 package com.coffeeandsoftware.api.services;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 import com.coffeeandsoftware.api.util.ReactionPK;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +34,8 @@ public class ReactionService {
         newReaction.setAuthor(author);
         newReaction.setR_publication(publication);
         newReaction.setR_type(reactionDTO.getType());
+        LocalDateTime timeNow = LocalDateTime.now();
+        newReaction.setReactionDate(timeNow);
         return newReaction;
     }
 
@@ -90,6 +92,8 @@ public class ReactionService {
             reaction.setAuthor(user);
             reaction.setR_publication(publication);
             reaction.setR_type(reactionDTO.getType());
+            LocalDateTime timeNow = LocalDateTime.now();
+            reaction.setReactionDate(timeNow);
             return reactionRepository.save(reaction);
         } return null;
 

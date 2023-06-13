@@ -2,15 +2,11 @@ package com.coffeeandsoftware.api.dto.ReturnDTO;
 
 import com.coffeeandsoftware.api.dto.ReactionDTO;
 import com.coffeeandsoftware.api.model.Publication;
-import com.coffeeandsoftware.api.model.Reaction;
-import com.coffeeandsoftware.api.model.Tag;
 import com.coffeeandsoftware.api.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
