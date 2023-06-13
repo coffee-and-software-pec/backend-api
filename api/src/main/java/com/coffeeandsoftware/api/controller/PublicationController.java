@@ -3,7 +3,6 @@ package com.coffeeandsoftware.api.controller;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import com.coffeeandsoftware.api.dto.PublicationDTO;
 import com.coffeeandsoftware.api.dto.PublicationUpdateDTO;
 import com.coffeeandsoftware.api.dto.ReactionDTO;

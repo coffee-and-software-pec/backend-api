@@ -3,7 +3,6 @@ package com.coffeeandsoftware.api.services;
 import com.coffeeandsoftware.api.dto.PublicationDTO;
 import com.coffeeandsoftware.api.dto.PublicationUpdateDTO;
 import com.coffeeandsoftware.api.dto.ReactionDTO;
-import com.coffeeandsoftware.api.dto.ReturnDTO.PublicationReturnDTO;
 import com.coffeeandsoftware.api.dto.TagDTO;
 import com.coffeeandsoftware.api.model.Publication;
 import com.coffeeandsoftware.api.model.Reaction;

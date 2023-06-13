@@ -1,9 +1,5 @@
 package com.coffeeandsoftware.api.dto;
 
-import java.util.UUID;
-
-import com.coffeeandsoftware.api.model.Comment;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

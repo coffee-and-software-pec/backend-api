@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.coffeeandsoftware.api.dto.ReactionDTO;
-import com.coffeeandsoftware.api.model.Reaction;
 import com.coffeeandsoftware.api.services.ReactionService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
