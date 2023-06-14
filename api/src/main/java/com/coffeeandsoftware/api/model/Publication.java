@@ -49,10 +49,10 @@ public class Publication implements Comparable<Publication>{
     @ManyToOne
     private User author;
 
-    @OneToMany(mappedBy="r_publication")
+    @OneToMany(mappedBy="r_publication", cascade = CascadeType.REMOVE)
     private List<Reaction> reactions = new ArrayList<>();
 
-    @OneToMany(mappedBy="publication")
+    @OneToMany(mappedBy="publication", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
     @Override

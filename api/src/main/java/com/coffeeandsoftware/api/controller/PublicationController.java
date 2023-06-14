@@ -87,6 +87,16 @@ public class PublicationController {
         return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.OK);
     }
 
+    @DeleteMapping("/{publicationId}")
+    public ResponseEntity<?> deletePublicationById(@PathVariable String publicationId) {
+        Publication publication = publicationService.deletePublication(publicationId);
+        if (publication != null) {
+            return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("There is no publication with this id", HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping("/{publicationId}/react")
     public ResponseEntity<?> react(@PathVariable String publicationId, @RequestBody ReactionDTO reactionDTO) {
         Publication publication = publicationService.react(publicationId, reactionDTO);

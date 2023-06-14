@@ -114,6 +114,16 @@ public class PublicationService {
         return publication;
     }
 
+    public Publication deletePublication(String publicationId) {
+        Publication publication = null;
+        Optional<Publication> optionalPublication = publicationRepository.findById(UUID.fromString(publicationId));
+        if (optionalPublication.isPresent()) {
+            publication = optionalPublication.get();
+            publicationRepository.deleteById(UUID.fromString(publicationId));
+        }
+        return publication;
+    }
+
     public boolean hasReacted(String publicationId, String userEmail) {
         List<Reaction> all_reactions = reactionService.getAllReactions(publicationId);
 
