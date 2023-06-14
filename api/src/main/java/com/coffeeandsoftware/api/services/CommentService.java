@@ -105,6 +105,16 @@ public class CommentService {
         } return comment;
     }
 
+    public Comment deleteComment(UUID commentId) {
+        Comment comment = null;
+        Optional<Comment> optionalComment = commentRepository.findById(commentId);
+        if (optionalComment.isPresent()) {
+            comment = optionalComment.get();
+            commentRepository.deleteById(commentId);
+        }
+        return comment;
+    }
+
     public List<Comment> getAllCommentsOrdered(PublicationDTO publicationDTO) {
         List<Comment> all_comments = getAllComments(publicationDTO);
         Collections.sort(all_comments);

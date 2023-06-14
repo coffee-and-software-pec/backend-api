@@ -1,5 +1,6 @@
 package com.coffeeandsoftware.api.model;
 
+import java.time.LocalDateTime;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,4 +31,5 @@ public class Reaction {
     private Publication r_publication;
 
     private String r_type;
+    private LocalDateTime reactionDate;
 }

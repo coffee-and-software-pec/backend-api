@@ -3,7 +3,6 @@ package com.coffeeandsoftware.api.controller;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import com.coffeeandsoftware.api.dto.PublicationDTO;
 import com.coffeeandsoftware.api.dto.PublicationUpdateDTO;
 import com.coffeeandsoftware.api.dto.ReactionDTO;
@@ -86,6 +85,16 @@ public class PublicationController {
                                                    @RequestBody PublicationUpdateDTO publicationDTO) {
         Publication publication = publicationService.updatePublication(publicationId, publicationDTO);
         return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{publicationId}")
+    public ResponseEntity<?> deletePublicationById(@PathVariable String publicationId) {
+        Publication publication = publicationService.deletePublication(publicationId);
+        if (publication != null) {
+            return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("There is no publication with this id", HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping("/{publicationId}/react")

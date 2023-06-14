@@ -2,7 +2,6 @@ package com.coffeeandsoftware.api.controller;
 
 import java.util.List;
 import java.util.UUID;
-
 import com.coffeeandsoftware.api.dto.ReturnDTO.CommentReturnDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,25 +43,35 @@ public class CommentController {
     @GetMapping("/byPublication")
     public ResponseEntity<?> getAllComments(@RequestBody PublicationDTO publicationDTO) {
         List<Comment> comments = commentService.getAllComments(publicationDTO);
-        return new ResponseEntity<>(comments, HttpStatus.OK);
+        return new ResponseEntity<>(comments.stream().map(CommentReturnDTO::new), HttpStatus.OK);
     }
 
     @GetMapping("/byAuthor")
     public ResponseEntity<?> getAllCommentsByAuthor(@RequestBody UserDTO author) {
         List<Comment> comments = commentService.getAllCommentsByAuthor(author);
-        return new ResponseEntity<>(comments, HttpStatus.OK);
+        return new ResponseEntity<>(comments.stream().map(CommentReturnDTO::new), HttpStatus.OK);
     }
 
     @GetMapping("/{commentId}")
     public ResponseEntity<?> getCommentById(@PathVariable String commentId) {
         Comment comment = commentService.getCommentById(UUID.fromString(commentId));
-        return new ResponseEntity<>(comment, HttpStatus.OK);
+        return new ResponseEntity<>(new CommentReturnDTO(comment), HttpStatus.OK);
     }
 
     @PatchMapping("/{commentId}")
     public ResponseEntity<?> updateCommentById(@PathVariable String commentId,
                                                 @RequestBody CommentUpdateDTO commentUpdateDTO) {
         Comment comment = commentService.updateComment(UUID.fromString(commentId), commentUpdateDTO);
-        return new ResponseEntity<>(comment, HttpStatus.OK);
+        return new ResponseEntity<>(new CommentReturnDTO(comment), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<?> deleteCommentById(@PathVariable String commentId) {
+        Comment comment = commentService.deleteComment(UUID.fromString(commentId));
+        if (comment != null) {
+            return new ResponseEntity<>(new CommentReturnDTO(comment), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("There is no comment with this id", HttpStatus.NOT_FOUND);
+        }
     }
 }
