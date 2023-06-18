@@ -60,6 +60,13 @@ public class PublicationService {
 
     public List<Publication> getAllPublications() { return publicationRepository.findAll(); }
 
+    public List<Publication> getAllPublicationsSortedByDate() {
+        return getAllPublications().stream()
+                .sorted(Comparator.comparing(Publication::getCreation_date).reversed())
+                .collect(Collectors.toList());
+
+    }
+
     public List<Publication> getAllPublicationsByTags(List<TagDTO> tags) {
         List<Publication> filtered_publications = new ArrayList<Publication>() {};
         List<Publication> all_publications = publicationRepository.findAll();
@@ -181,6 +188,7 @@ public class PublicationService {
         Publication[] all_publications = publications.toArray(new Publication[publications.size()]);
         quickSortByPopularity(all_publications, 0, all_publications.length-1);
         ArrayList<Publication> result = new ArrayList<>(Arrays.asList(all_publications));
+        Collections.reverse(result);
         return result;
     }
 
@@ -270,15 +278,11 @@ public class PublicationService {
     }
 
     public List<Publication> getTrendingPublications() {
-        return getAllPublicationsByTrending().stream()
-                .limit(4)
-                .collect(Collectors.toList());
+        return new ArrayList<>(getAllPublicationsByTrending());
     }
 
     public List<Publication> getPopularPublications() {
-        return getAllPublicationsByPopularity().stream()
-                .limit(4)
-                .collect(Collectors.toList());
+        return new ArrayList<>(getAllPublicationsByPopularity());
     }
 
     public Publication react(String publicationId, ReactionDTO reactionDTO) {

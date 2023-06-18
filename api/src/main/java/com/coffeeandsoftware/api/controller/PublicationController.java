@@ -34,7 +34,7 @@ public class PublicationController {
 
     @GetMapping
     public ResponseEntity<?> getAllPublications() {
-        List<Publication> publications = publicationService.getAllPublications();
+        List<Publication> publications = publicationService.getAllPublicationsSortedByDate();
         return new ResponseEntity<>(
                 publications.stream().map(PublicationReturnDTO::new).collect(Collectors.toList()),
                 HttpStatus.OK);
