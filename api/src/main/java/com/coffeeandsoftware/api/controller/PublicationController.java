@@ -1,5 +1,6 @@
 package com.coffeeandsoftware.api.controller;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -58,9 +59,11 @@ public class PublicationController {
 
     @GetMapping("/popularPublications")
     public ResponseEntity<?> getPopularPublications() {
-        List<Publication> publications = publicationService.getPopularPublications();
+        List<Publication> publications = publicationService.getAllPublications();
         return new ResponseEntity<>(
-                publications.stream().map(PublicationReturnDTO::new).collect(Collectors.toList()),
+                publications.stream().map(PublicationReturnDTO::new)
+                        .sorted((o1, o2) -> o2.getHeartsCount() - o1.getHeartsCount())
+                        .collect(Collectors.toList()),
                 HttpStatus.OK);
     }
 
