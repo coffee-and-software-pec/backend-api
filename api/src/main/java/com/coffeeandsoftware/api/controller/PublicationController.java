@@ -1,5 +1,6 @@
 package com.coffeeandsoftware.api.controller;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -34,7 +35,7 @@ public class PublicationController {
 
     @GetMapping
     public ResponseEntity<?> getAllPublications() {
-        List<Publication> publications = publicationService.getAllPublications();
+        List<Publication> publications = publicationService.getAllPublicationsSortedByDate();
         return new ResponseEntity<>(
                 publications.stream().map(PublicationReturnDTO::new).collect(Collectors.toList()),
                 HttpStatus.OK);
@@ -45,6 +46,24 @@ public class PublicationController {
         List<Publication> publications = publicationService.getLandingPublicationsOrdered();
         return new ResponseEntity<>(
                 publications.stream().map(PublicationReturnDTO::new).collect(Collectors.toList()),
+                HttpStatus.OK);
+    }
+
+    @GetMapping("/trendingPublications")
+    public ResponseEntity<?> getTrendingPublications() {
+        List<Publication> publications = publicationService.getTrendingPublications();
+        return new ResponseEntity<>(
+                publications.stream().map(PublicationReturnDTO::new).collect(Collectors.toList()),
+                HttpStatus.OK);
+    }
+
+    @GetMapping("/popularPublications")
+    public ResponseEntity<?> getPopularPublications() {
+        List<Publication> publications = publicationService.getAllPublications();
+        return new ResponseEntity<>(
+                publications.stream().map(PublicationReturnDTO::new)
+                        .sorted((o1, o2) -> o2.getHeartsCount() - o1.getHeartsCount())
+                        .collect(Collectors.toList()),
                 HttpStatus.OK);
     }
 

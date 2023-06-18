@@ -9,9 +9,12 @@ import com.coffeeandsoftware.api.model.Reaction;
 import com.coffeeandsoftware.api.model.Tag;
 import com.coffeeandsoftware.api.model.User;
 import com.coffeeandsoftware.api.repositories.PublicationRepository;
+import com.coffeeandsoftware.api.util.PublicationWrapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -55,8 +58,13 @@ public class PublicationService {
         return newPublication;
     }
 
-    public List<Publication> getAllPublications() {
-        return publicationRepository.findAll();
+    public List<Publication> getAllPublications() { return publicationRepository.findAll(); }
+
+    public List<Publication> getAllPublicationsSortedByDate() {
+        return getAllPublications().stream()
+                .sorted(Comparator.comparing(Publication::getCreation_date).reversed())
+                .collect(Collectors.toList());
+
     }
 
     public List<Publication> getAllPublicationsByTags(List<TagDTO> tags) {
@@ -78,10 +86,7 @@ public class PublicationService {
             }
         } else {
             filtered_publications = all_publications;
-        }
-
-        return filtered_publications;
-//        return publicationRepository.findAllByTags(tags.stream().map(TagDTO::getTitle).collect(Collectors.toList()));
+        } return filtered_publications;
     }
 
     public Publication getPublicationById(UUID publicationId) {
@@ -178,6 +183,88 @@ public class PublicationService {
         return all_publications;
     }
 
+    public List<Publication> getAllPublicationsByPopularity() {
+        List<Publication> publications = getAllPublications();
+        Publication[] all_publications = publications.toArray(new Publication[publications.size()]);
+        quickSortByPopularity(all_publications, 0, all_publications.length-1);
+        ArrayList<Publication> result = new ArrayList<>(Arrays.asList(all_publications));
+        Collections.reverse(result);
+        return result;
+    }
+
+    public List<Publication> getAllPublicationsByTrending() {
+        List<Publication> all_publications = getAllPublications();
+        //List<Integer> scores = new ArrayList<>(all_publications.size());
+        List<PublicationWrapper> scores = new ArrayList<>(all_publications.size());
+        List<Publication> result = new ArrayList<>(all_publications.size());
+
+        for (int i = 0; i < all_publications.size(); i++) {
+            //scores.add(calculatePublicationScore(all_publications.get(i)));
+            Publication pub = all_publications.get(i);
+            scores.add(i, new PublicationWrapper(pub,calculatePublicationScore(pub)));
+        }
+        PublicationWrapper[] pws = scores.toArray(new PublicationWrapper[all_publications.size()]);
+        Arrays.sort(pws, Collections.reverseOrder());
+        for (int i = 0; i < all_publications.size(); i++) {
+            result.add(i, pws[i].getPublication());
+        }
+        return result;
+    }
+
+    private static int calculatePublicationScore(Publication p) {
+        int score = 0;
+        LocalDateTime timeNow = LocalDateTime.now();
+        if (!p.getReactions().isEmpty()) {
+            for (Reaction r : p.getReactions()) {
+                score += calculateReactionScore(r, timeNow);
+            }
+        }
+         return score;
+    }
+    private static int calculateReactionScore(Reaction reaction, LocalDateTime timeNow) {
+        LocalDateTime reaction_time = reaction.getReactionDate();
+        if (reaction_time == null) {
+            return 0;
+        }
+        if (reaction_time.until(timeNow, ChronoUnit.MONTHS) < 2) {
+            if (reaction_time.until(timeNow, ChronoUnit.WEEKS) < 2) {
+                if (reaction_time.until(timeNow, ChronoUnit.DAYS) < 2) {
+                    if (reaction_time.until(timeNow, ChronoUnit.HOURS) < 2) {
+                        return 81;
+                    } return 27;
+                } return 9;
+            } return 3;
+        } return 1;
+    }
+
+    private static void quickSortByPopularity(Publication[] collection, int begin, int end ) {
+        if (begin < end) {
+            int partition_index = partition(collection, begin, end);
+            quickSortByPopularity(collection, begin, partition_index-1);
+            quickSortByPopularity(collection, partition_index+1, end);
+        }
+    }
+
+    private static int partition(Publication[] collection, int begin, int end) {
+        Publication pivot = collection[end];
+        int i = begin - 1;
+
+        for (int j = begin; j < end; j++) {
+            if (collection[j].getReactions().size() <= pivot.getReactions().size()) {
+                i++;
+
+                Publication swapTemp = collection[i];
+                collection[i] = collection[j];
+                collection[j] = swapTemp;
+            }
+        }
+
+        Publication swapTemp = collection[i+1];
+        collection[i+1] = collection[end];
+        collection[end] = swapTemp;
+        return i++;
+    }
+
     public List<Publication> getAllUserPublications(String userId) {
         User user = userService.getUserById(UUID.fromString(userId));
         return publicationRepository.findAllByAuthor(user);
@@ -188,6 +275,14 @@ public class PublicationService {
                 .sorted(Comparator.comparing(Publication::getCreation_date).reversed())
                 .limit(4)
                 .collect(Collectors.toList());
+    }
+
+    public List<Publication> getTrendingPublications() {
+        return new ArrayList<>(getAllPublicationsByTrending());
+    }
+
+    public List<Publication> getPopularPublications() {
+        return new ArrayList<>(getAllPublicationsByPopularity());
     }
 
     public Publication react(String publicationId, ReactionDTO reactionDTO) {
