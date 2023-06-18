@@ -59,7 +59,7 @@ public class PublicationController {
 
     @GetMapping("/popularPublications")
     public ResponseEntity<?> getPopularPublications() {
-        List<Publication> publications = publicationService.getAllPublications();
+        List<Publication> publications = publicationService.getPopularPublications();
         return new ResponseEntity<>(
                 publications.stream().map(PublicationReturnDTO::new)
                         .sorted((o1, o2) -> o2.getHeartsCount() - o1.getHeartsCount())
@@ -96,6 +96,12 @@ public class PublicationController {
     @GetMapping("/{publicationId}")
     public ResponseEntity<?> getPublicationById(@PathVariable String publicationId) {
         Publication publication = publicationService.getPublicationById(UUID.fromString(publicationId));
+        return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{publicationId}/publish")
+    public ResponseEntity<?> publishPublicationById(@PathVariable String publicationId) {
+        Publication publication = publicationService.publishPublication(publicationId);
         return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.OK);
     }
 
