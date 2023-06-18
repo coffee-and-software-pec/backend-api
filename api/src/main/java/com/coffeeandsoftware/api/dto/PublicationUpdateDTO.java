@@ -15,4 +15,6 @@ public class PublicationUpdateDTO {
     private String continuous_text;
     private String main_img_url;
     private List<TagDTO> tagList;
+    private boolean is_private;
+    private boolean is_draft;
 }

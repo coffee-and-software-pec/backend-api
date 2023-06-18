@@ -41,6 +41,8 @@ public class PublicationService {
         newPublication.setSubtitle(publicationDTO.getSubtitle());
         newPublication.setContinuous_text(publicationDTO.getContinuous_text());
         newPublication.setMain_img_url(publicationDTO.getMain_img_url());
+        newPublication.set_draft(true);
+        newPublication.set_private(publicationDTO.is_private());
 
         LocalDateTime timeNow = LocalDateTime.now();
 
@@ -58,7 +60,9 @@ public class PublicationService {
         return newPublication;
     }
 
-    public List<Publication> getAllPublications() { return publicationRepository.findAll(); }
+    public List<Publication> getAllPublications() {
+        return publicationRepository.findAll().stream().filter(p -> !p.is_draft()).collect(Collectors.toList());
+    }
 
     public List<Publication> getAllPublicationsSortedByDate() {
         return getAllPublications().stream()
@@ -69,7 +73,7 @@ public class PublicationService {
 
     public List<Publication> getAllPublicationsByTags(List<TagDTO> tags) {
         List<Publication> filtered_publications = new ArrayList<Publication>() {};
-        List<Publication> all_publications = publicationRepository.findAll();
+        List<Publication> all_publications = getAllPublications();
 
         if (tags.size() > 0) {
             for (Publication publication:all_publications){
@@ -109,6 +113,7 @@ public class PublicationService {
             publication.setContinuous_text(publicationDTO.getContinuous_text());
             publication.setMain_img_url(publicationDTO.getMain_img_url());
             publication.setLast_modification(LocalDateTime.now());
+            publication.set_private(publicationDTO.is_private());
 
             if (publicationDTO.getTagList() != null && publicationDTO.getTagList().size() > 0) {
                 List<Tag> tags = tagService.createTagsIfNotExists(publicationDTO.getTagList());
@@ -125,6 +130,18 @@ public class PublicationService {
         if (optionalPublication.isPresent()) {
             publication = optionalPublication.get();
             publicationRepository.deleteById(UUID.fromString(publicationId));
+        }
+        return publication;
+    }
+
+    public Publication publishPublication(String publicationId) {
+        Publication publication = null;
+
+        Optional<Publication> optionalPublication = publicationRepository.findById(UUID.fromString(publicationId));
+        if (optionalPublication.isPresent()) {
+            publication = optionalPublication.get();
+            publication.set_draft(false);
+            publicationRepository.save(publication);
         }
         return publication;
     }

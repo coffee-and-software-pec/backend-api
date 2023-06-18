@@ -25,7 +25,7 @@ public class PublicationReturnDTO {
     private LocalDateTime creation_date;
     private int visualizationsCount;
     private List<TagReturnDTO> tags;
-    private User author;
+    private UserReturnDTO author;
     private List<ReactionDTO> reactions;
     private int heartsCount;
     private int commentsCount;
@@ -42,7 +42,12 @@ public class PublicationReturnDTO {
         this.tags = publication.getTags().stream()
                 .map(t -> new TagReturnDTO(t.getTitle()))
                 .collect(Collectors.toList());
-        this.author = publication.getAuthor();
+        if (publication.is_private()) {
+            this.author = new UserReturnDTO("", "Anônimo", "");
+        } else {
+            this.author = new UserReturnDTO(publication.getAuthor());
+        }
+
         this.heartsCount = publication.getReactions().size();
         this.commentsCount = publication.getComments().size();
     }

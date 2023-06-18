@@ -14,6 +14,7 @@ public class PublicationDTO {
     private String continuous_text;
     private String main_img_url;
     private String author_id;
+    private boolean is_private;
 
     private List<TagDTO> tagList;
 }
