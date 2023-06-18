@@ -48,6 +48,22 @@ public class PublicationController {
                 HttpStatus.OK);
     }
 
+    @GetMapping("/trendingPublications")
+    public ResponseEntity<?> getTrendingPublications() {
+        List<Publication> publications = publicationService.getTrendingPublications();
+        return new ResponseEntity<>(
+                publications.stream().map(PublicationReturnDTO::new).collect(Collectors.toList()),
+                HttpStatus.OK);
+    }
+
+    @GetMapping("/popularPublications")
+    public ResponseEntity<?> getPopularPublications() {
+        List<Publication> publications = publicationService.getPopularPublications();
+        return new ResponseEntity<>(
+                publications.stream().map(PublicationReturnDTO::new).collect(Collectors.toList()),
+                HttpStatus.OK);
+    }
+
     @GetMapping("/userPublications/{userId}")
     public ResponseEntity<?> getAllUserPublications(@PathVariable String userId) {
         List<Publication> publications = publicationService.getAllUserPublications(userId);
