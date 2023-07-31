@@ -98,8 +98,6 @@ public class CommentService {
         if (optionalComment.isPresent()) {
             comment = optionalComment.get();
             comment.setC_text(newComment.getText());
-            comment.setParent(newComment.getParent());
-            comment.setPublication(newComment.getPublication());
             comment.setLast_modification(LocalDateTime.now());
             commentRepository.save(comment);
         } return comment;

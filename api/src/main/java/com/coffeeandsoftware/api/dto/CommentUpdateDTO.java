@@ -11,7 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CommentUpdateDTO {
     private String text;
-    private Comment parent;
-    private Publication publication;
 
 }
