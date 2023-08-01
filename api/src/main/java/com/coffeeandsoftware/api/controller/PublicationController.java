@@ -49,7 +49,8 @@ public class PublicationController {
                 HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getAllPublicationsBySearch(String search) {
+    @GetMapping("/bySearch/{search}")
+    public ResponseEntity<?> getAllPublicationsBySearch(@PathVariable String search) {
         List<Publication> publications = publicationService.getAllPublicationsBySearch(search);
         return new ResponseEntity<>(
                 publications.stream().map(PublicationReturnDTO::new).collect(Collectors.toList()),
