@@ -49,6 +49,13 @@ public class PublicationController {
                 HttpStatus.OK);
     }
 
+    public ResponseEntity<?> getAllPublicationsBySearch(String search) {
+        List<Publication> publications = publicationService.getAllPublicationsBySearch(search);
+        return new ResponseEntity<>(
+                publications.stream().map(PublicationReturnDTO::new).collect(Collectors.toList()),
+                HttpStatus.OK);
+    }
+
     @GetMapping("/trendingPublications")
     public ResponseEntity<?> getTrendingPublications() {
         List<Publication> publications = publicationService.getTrendingPublications();

@@ -214,7 +214,7 @@ public class PublicationService {
         ArrayList<Publication> result = new ArrayList<>();
         for (Publication publication : publications){
             if (publication.getTitle().contains(search) || publication.getSubtitle().contains(search) || publication.getContinuous_text().contains(search)){
-                result.add(publicationm);
+                result.add(publication);
             } 
         }
         return result;
