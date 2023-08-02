@@ -209,6 +209,17 @@ public class PublicationService {
         return result;
     }
 
+    public List<Publication> getAllPublicationsBySearch(String search) {
+        List<Publication> publications = getAllPublications();
+        ArrayList<Publication> result = new ArrayList<>();
+        for (Publication publication : publications){
+            if (publication.getTitle().contains(search) || publication.getSubtitle().contains(search) || publication.getContinuous_text().contains(search)){
+                result.add(publication);
+            } 
+        }
+        return result;
+    }
+
     public List<Publication> getAllPublicationsByTrending() {
         List<Publication> all_publications = getAllPublications();
         //List<Integer> scores = new ArrayList<>(all_publications.size());
