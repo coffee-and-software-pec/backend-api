@@ -60,7 +60,8 @@ public class UserController {
         } catch (Exception e){
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         }
-
+    }
+    
     @GetMapping("/stats/{userId}")
     public ResponseEntity<?> getUserStatsById(@PathVariable String userId, @RequestHeader("REQUEST_USER_ID") String requestUserId) {
         UserStatsDTO userStatsDTO = userService.getUserStatsById(userId, requestUserId);

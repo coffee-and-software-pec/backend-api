@@ -80,7 +80,8 @@ public class UserService {
 
             }
         }
-
+    }
+    
     public UserStatsDTO getUserStatsById(String userId, String requestUserId) {
         User user = getUserById(UUID.fromString(userId));
         return mapUserToUserStats(user);
