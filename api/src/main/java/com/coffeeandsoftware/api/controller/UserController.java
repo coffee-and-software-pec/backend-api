@@ -1,13 +1,17 @@
 package com.coffeeandsoftware.api.controller;
 
+import com.coffeeandsoftware.api.dto.ReturnDTO.UserStatsDTO;
 import com.coffeeandsoftware.api.model.User;
 import com.coffeeandsoftware.api.dto.UserDTO;
 import com.coffeeandsoftware.api.dto.FollowerDTO;
 import com.coffeeandsoftware.api.services.UserService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -42,6 +46,7 @@ public class UserController {
         return new ResponseEntity<>(userService.getUserByEmail(email), HttpStatus.OK);
     }
 
+
     @GetMapping("/getFollowers/{userId}")
     public ResponseEntity<?> getFollowers(@PathVariable String userId) {
         return new ResponseEntity<>(userService.getFollowers(UUID.fromString(userId)), HttpStatus.OK);
@@ -55,5 +60,17 @@ public class UserController {
         } catch (Exception e){
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         }
+
+    @GetMapping("/stats/{userId}")
+    public ResponseEntity<?> getUserStatsById(@PathVariable String userId, @RequestHeader("REQUEST_USER_ID") String requestUserId) {
+        UserStatsDTO userStatsDTO = userService.getUserStatsById(userId, requestUserId);
+        return new ResponseEntity<>(userStatsDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<?> getUserStats(@RequestHeader("REQUEST_USER_ID") String requestUserId) {
+        List<UserStatsDTO> userStatsDTOList = userService.getUsersStats(requestUserId);
+        return new ResponseEntity<>(userStatsDTOList, HttpStatus.OK);
+
     }
 }
