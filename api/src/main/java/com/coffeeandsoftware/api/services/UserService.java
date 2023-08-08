@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -44,5 +45,30 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public Set<UUID> getFollowers(UUID id) {
+        Set<UUID> followers = null; 
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if (optionalUser.isPresent()) followers = optionalUser.get().getFollowers();
+        return followers;
+    }
+
+    public void addFollower(UUID id, UUID followerId) throws Exception {
+        User user = null; 
+        Optional<User> u = userRepository.findById(id);
+        if (!u.isPresent()) throw new Exception();
+        else {
+            Optional<User> follower = userRepository.findById(followerId);
+            if (!u.isPresent()) throw new Exception();
+            else {
+                Set<UUID> followers = u.get().getFollowers();
+                followers.add(followerId);
+                u.get().setFollowers(followers);
+                userRepository.save(u.get());
+
+            }
+        }
     }
 }
