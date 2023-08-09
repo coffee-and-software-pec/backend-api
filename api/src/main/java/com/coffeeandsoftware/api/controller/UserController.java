@@ -31,6 +31,16 @@ public class UserController {
         }
     }
 
+    @PatchMapping("/{userId}")
+    public ResponseEntity<?> updateUser(@PathVariable String userId, @RequestBody UserDTO userDTO) {
+        try {
+            User user = userService.updateUser(userId, userDTO);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @GetMapping()
     public ResponseEntity<?> getAllUsers() {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
@@ -56,6 +66,16 @@ public class UserController {
     public ResponseEntity<?> addFollower(@RequestBody FollowerDTO followerDTO){
         try {
             userService.addFollower(UUID.fromString(followerDTO.getId()) , UUID.fromString(followerDTO.getFollowerId()));
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    @PatchMapping("/removeFollower")
+    public ResponseEntity<?> removeFollower(@RequestBody FollowerDTO followerDTO){
+        try {
+            userService.removeFollower(UUID.fromString(followerDTO.getId()) , UUID.fromString(followerDTO.getFollowerId()));
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);

@@ -84,7 +84,8 @@ public class UserService {
     
     public UserStatsDTO getUserStatsById(String userId, String requestUserId) {
         User user = getUserById(UUID.fromString(userId));
-        return mapUserToUserStats(user);
+        User requestUser = getUserById(UUID.fromString(requestUserId));
+        return mapUserToUserStats(requestUser, user, getAllUsers());
     }
 
     public List<UserStatsDTO> getUsersStats(String requestUserId) {
@@ -92,25 +93,56 @@ public class UserService {
 
         List<User> users = getAllUsers();
 
-        return users.stream().map(this::mapUserToUserStats).collect(Collectors.toList());
+        User requestUser = getUserById(UUID.fromString(requestUserId));
+        return users.stream().map(u -> mapUserToUserStats(requestUser, u, users)).collect(Collectors.toList());
     }
 
-    private UserStatsDTO mapUserToUserStats(User user) {
+    private UserStatsDTO mapUserToUserStats(User requestUser, User user, List<User> allUsers) {
+        int followers = (int) allUsers.stream().filter(u -> u.getFollowers().contains(user.getU_id())).count();
+
         UserStatsDTO userStatsDTO = new UserStatsDTO();
         userStatsDTO.setId(user.getU_id().toString());
         userStatsDTO.setName(user.getU_name());
         userStatsDTO.setEmail(user.getEmail());
         userStatsDTO.setPhotoURL(user.getPhotoURL());
         userStatsDTO.setBio("");
-        userStatsDTO.setFollowingCount(0);
-        userStatsDTO.setFollowersCount(0);
+        userStatsDTO.setFollowingCount(user.getFollowers().size());
+        userStatsDTO.setFollowersCount(followers);
         List<Publication> publications = publicationRepository.findAllByAuthor(user);
         userStatsDTO.setPosts(publications.size());
         userStatsDTO.setLikes(publications.stream().map(post -> post.getReactions().size()).mapToInt(Integer::intValue).sum());
         userStatsDTO.setComments(publications.stream().map(post -> post.getComments().size()).mapToInt(Integer::intValue).sum());
         // implement here the check of the followers list
         // requestUser.followList.any(userId)
-        userStatsDTO.setFollowing(false);
+        boolean isFollowing = requestUser.getFollowers().contains(user.getU_id());
+        userStatsDTO.setFollowing(isFollowing);
         return userStatsDTO;
+    }
+
+    public User updateUser(String userId, UserDTO userDTO) {
+        User user = getUserById(UUID.fromString(userId));
+
+        if (user != null) {
+            user.setU_name(userDTO.getName());
+            user.setPhotoURL(userDTO.getPhotoURL());
+            userRepository.save(user);
+        }
+        return user;
+    }
+
+    public void removeFollower(UUID id, UUID followerId) throws Exception {
+        User user = null;
+        Optional<User> u = userRepository.findById(id);
+        if (u.isEmpty()) throw new Exception();
+        else {
+            Optional<User> follower = userRepository.findById(followerId);
+            if (follower.isEmpty()) throw new Exception();
+            else {
+                Set<UUID> followers = u.get().getFollowers();
+                followers.remove(followerId);
+                u.get().setFollowers(followers);
+                userRepository.save(u.get());
+            }
+        }
     }
 }
