@@ -1,7 +1,8 @@
 package com.coffeeandsoftware.api.controller;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import com.coffeeandsoftware.api.dto.ReturnDTO.CommentReturnDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,25 @@ public class CommentController {
     @GetMapping("/byPublication/{publicationId}")
     public ResponseEntity<?> getAllComments(@PathVariable String publicationId) {
         List<Comment> comments = commentService.getAllCommentsByPublication(publicationId);
-        return new ResponseEntity<>(comments.stream().map(CommentReturnDTO::new), HttpStatus.OK);
+
+        HashMap<UUID, List<Comment>> repliesMap = new HashMap<>();
+        for (Comment comment: comments) {
+            if (comment.getParent() == null) {
+                repliesMap.put(comment.getC_id(), new ArrayList<>());
+            } else {
+                UUID parentId = comment.getParent().getC_id();
+                if (repliesMap.get(parentId) == null) {
+                    repliesMap.put(parentId, Collections.singletonList(comment));
+                } else {
+                    repliesMap.get(parentId).add(comment);
+                }
+            }
+        }
+
+        List<CommentReturnDTO> commentReturnDTOS = comments.stream()
+                .filter(c -> c.getParent() == null)
+                .map(c -> new CommentReturnDTO(c, repliesMap.get(c.getC_id()))).collect(Collectors.toList());
+        return new ResponseEntity<>(commentReturnDTOS, HttpStatus.OK);
     }
 
     @GetMapping("/byPublication")
