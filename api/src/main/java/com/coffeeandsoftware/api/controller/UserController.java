@@ -82,14 +82,14 @@ public class UserController {
         }
     }
     
-    @GetMapping("/stats/{userId}")
-    public ResponseEntity<?> getUserStatsById(@PathVariable String userId, @RequestHeader("REQUEST_USER_ID") String requestUserId) {
+    @GetMapping("/stats/{userId}/{requestUserId}")
+    public ResponseEntity<?> getUserStatsById(@PathVariable String userId, @PathVariable String requestUserId) {
         UserStatsDTO userStatsDTO = userService.getUserStatsById(userId, requestUserId);
         return new ResponseEntity<>(userStatsDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/stats")
-    public ResponseEntity<?> getUserStats(@RequestHeader("REQUEST_USER_ID") String requestUserId) {
+    @GetMapping("/stats/{requestUserId}")
+    public ResponseEntity<?> getUserStats(@PathVariable String requestUserId) {
         List<UserStatsDTO> userStatsDTOList = userService.getUsersStats(requestUserId);
         return new ResponseEntity<>(userStatsDTOList, HttpStatus.OK);
 
