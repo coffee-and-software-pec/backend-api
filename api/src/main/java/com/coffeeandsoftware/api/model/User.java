@@ -45,5 +45,9 @@ public class User {
     @CollectionTable(name  = "followers", joinColumns = @JoinColumn(name = "u_id"))
     private Set<UUID> followers = new HashSet<UUID>(); 
 
+    @OneToMany(mappedBy="author_d", cascade = CascadeType.REMOVE)
+    private Set<Denuncia> denuncia = new HashSet<>();
+
+
 
 }
