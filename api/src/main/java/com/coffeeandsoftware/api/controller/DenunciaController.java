@@ -2,6 +2,7 @@ package com.coffeeandsoftware.api.controller;
 
 import java.util.List;
 import java.util.UUID;
+import com.coffeeandsoftware.api.model.Denuncia;
 import com.coffeeandsoftware.api.services.DenunciaService;
 import com.coffeeandsoftware.api.dto.DenunciaDTO;
 import org.springframework.http.HttpStatus;
@@ -27,4 +28,19 @@ public class DenunciaController{
         
     }
 
+    @GetMapping("/")
+    public ResponseEntity<?> getAllDenuncia(){
+        List<Denuncia> denuncias = denunciaService.getAll();
+        return new ResponseEntity<>(denuncias , HttpStatus.OK);
+    }
+
+    @GetMapping("/{denunciaId}")
+    public ResponseEntity<?> getById(@PathVariable String denunciaId){
+        return new ResponseEntity<>(denunciaService.getById(UUID.fromString(denunciaId)), HttpStatus.OK);
+    }
+    
+    @DeleteMapping("/{denunciaId}")
+    public ResponseEntity<?> deleteById(@PathVariable String denunciaId){
+        return new ResponseEntity<>(denunciaService.deleteById(UUID.fromString(denunciaId)), HttpStatus.OK);
+    }
 }

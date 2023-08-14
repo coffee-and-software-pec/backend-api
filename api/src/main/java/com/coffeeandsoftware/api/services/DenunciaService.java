@@ -50,8 +50,22 @@ public class DenunciaService {
         return null ;        
     }
 
+    public List<Denuncia> getAll(){
+        return denunciaRepository.findAll();
+    }
 
+    public Optional<Denuncia> getById(UUID denunciaId){
+        return denunciaRepository.findById(denunciaId);
+    }
 
+    public Denuncia deleteById(UUID denunciaId){
+        Denuncia denuncia = null;
+        Optional<Denuncia> optionalDenuncia = denunciaRepository.findById(denunciaId);
+        if (optionalDenuncia.isPresent()){
+            denuncia = optionalDenuncia.get();
+            denunciaRepository.deleteById(denunciaId);
+        }
 
-
+        return denuncia;
+    }
 }
