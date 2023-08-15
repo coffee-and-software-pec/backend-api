@@ -31,4 +31,12 @@ public class TagController {
         Tag tag = tagService.createTag(tagDTO);
         return new ResponseEntity<>(tag, HttpStatus.CREATED);
     }
+
+    @GetMapping("/trendingTags")
+    public ResponseEntity<?> getTrendingTags() {
+        List<Tag> tags = tagService.getAllTagsByTrending();
+        List<TagReturnDTO> tagReturnDTOS = tags.stream().map(t -> new TagReturnDTO(t.getTitle()))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(tagReturnDTOS, HttpStatus.OK);
+    }
 }

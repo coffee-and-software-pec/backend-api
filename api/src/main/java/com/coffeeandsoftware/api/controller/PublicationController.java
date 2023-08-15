@@ -1,6 +1,5 @@
 package com.coffeeandsoftware.api.controller;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/publication")
 public class PublicationController {
-    
+
     @Autowired
     UserService userService;
 
