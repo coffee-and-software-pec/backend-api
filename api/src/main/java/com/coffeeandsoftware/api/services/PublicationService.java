@@ -71,6 +71,19 @@ public class PublicationService {
 
     }
 
+    // public List<Publication> getAllPublicationsWithTag(Tag chosenTag) {
+    //     return publicationRepository.findAllWithTag(chosenTag).stream().filter(pub -> !pub.is_draft()).collect(Collectors.toList());
+    // }
+
+    public int calculateTagTrend(Tag chosenTag) {
+        int result = 0;
+        List<TagDTO> chosenTags = new ArrayList<>(1);
+        chosenTags.add(new TagDTO(chosenTag.getTitle()));
+        for (Publication eachPublication : getAllPublicationsByTags(chosenTags)) {
+            result += calculatePublicationScore(eachPublication);
+        } return result;
+    }
+
     public List<Publication> getAllPublicationsByTags(List<TagDTO> tags) {
         List<Publication> filtered_publications = new ArrayList<Publication>() {};
         List<Publication> all_publications = getAllPublications();
@@ -215,19 +228,17 @@ public class PublicationService {
         for (Publication publication : publications){
             if (publication.getTitle().contains(search) || publication.getSubtitle().contains(search) || publication.getContinuous_text().contains(search)){
                 result.add(publication);
-            } 
+            }
         }
         return result;
     }
 
     public List<Publication> getAllPublicationsByTrending() {
         List<Publication> all_publications = getAllPublications();
-        //List<Integer> scores = new ArrayList<>(all_publications.size());
         List<PublicationWrapper> scores = new ArrayList<>(all_publications.size());
         List<Publication> result = new ArrayList<>(all_publications.size());
 
         for (int i = 0; i < all_publications.size(); i++) {
-            //scores.add(calculatePublicationScore(all_publications.get(i)));
             Publication pub = all_publications.get(i);
             scores.add(i, new PublicationWrapper(pub,calculatePublicationScore(pub)));
         }
