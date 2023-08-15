@@ -5,6 +5,8 @@ import java.util.UUID;
 import java.util.Optional;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.coffeeandsoftware.api.model.Tag;
@@ -70,12 +72,8 @@ public class TagService {
         for (Tag eachTag : tagList) {
             scoredTags.add(new TagWrapper(eachTag, publicationService.calculateTagTrend(eachTag)));
         }
-
-        Collections.sort(scoredTags);
-        ArrayList<Tag> trendingTags = new ArrayList<>(scoredTags.size());
-        for (int index = 0; index < scoredTags.size(); index++) {
-            trendingTags.add(scoredTags.get(index).getTag());
-        }
-        return trendingTags;
+        return scoredTags.stream().sorted(Collections.reverseOrder())
+            .map(TagWrapper::getTag)
+            .collect(Collectors.toList());
     }
 }
