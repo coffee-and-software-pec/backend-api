@@ -7,6 +7,7 @@ import javax.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 import java.time.LocalDateTime;
 import java.util.*;
+import javax.persistence.FetchType;
 
 @Entity
 @Table(name = "publication_i")
@@ -46,6 +47,9 @@ public class Publication implements Comparable<Publication>{
     )
     private List<Tag> tags = new ArrayList<>();
 
+    @OneToMany(mappedBy="publication", cascade = CascadeType.REMOVE)
+    private List<Revision> revisions = new ArrayList<>();
+
     @ManyToOne
     private User author;
 
@@ -54,6 +58,9 @@ public class Publication implements Comparable<Publication>{
 
     @OneToMany(mappedBy="publication", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy="publication", cascade = CascadeType.REMOVE)
+    private List<Denuncia> denuncia = new ArrayList<>();
 
     @Override
     public int compareTo(Publication arg0) {

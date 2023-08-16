@@ -15,6 +15,9 @@ import javax.persistence.UniqueConstraint;
 import java.util.UUID;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.FetchType;
+import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Table(
@@ -45,5 +48,7 @@ public class User {
     @CollectionTable(name  = "followers", joinColumns = @JoinColumn(name = "u_id"))
     private Set<UUID> followers = new HashSet<UUID>(); 
 
+    @OneToMany(mappedBy="author", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<Denuncia> denuncia = new ArrayList<>();
 
 }

@@ -4,6 +4,7 @@ import com.coffeeandsoftware.api.dto.PublicationDTO;
 import com.coffeeandsoftware.api.dto.PublicationUpdateDTO;
 import com.coffeeandsoftware.api.dto.ReactionDTO;
 import com.coffeeandsoftware.api.dto.TagDTO;
+import com.coffeeandsoftware.api.model.Revision;
 import com.coffeeandsoftware.api.model.Publication;
 import com.coffeeandsoftware.api.model.Reaction;
 import com.coffeeandsoftware.api.model.Tag;
@@ -32,6 +33,9 @@ public class PublicationService {
 
     @Autowired
     ReactionService reactionService;
+
+    @Autowired
+    RevisionService revisionService;
 
     public Publication createPublication(PublicationDTO publicationDTO) {
         User author = userService.getUserById(UUID.fromString(publicationDTO.getAuthor_id()));
@@ -69,6 +73,19 @@ public class PublicationService {
                 .sorted(Comparator.comparing(Publication::getCreation_date).reversed())
                 .collect(Collectors.toList());
 
+    }
+
+    // public List<Publication> getAllPublicationsWithTag(Tag chosenTag) {
+    //     return publicationRepository.findAllWithTag(chosenTag).stream().filter(pub -> !pub.is_draft()).collect(Collectors.toList());
+    // }
+
+    public int calculateTagTrend(Tag chosenTag) {
+        int result = 0;
+        List<TagDTO> chosenTags = new ArrayList<>(1);
+        chosenTags.add(new TagDTO(chosenTag.getTitle()));
+        for (Publication eachPublication : getAllPublicationsByTags(chosenTags)) {
+            result += calculatePublicationScore(eachPublication);
+        } return result;
     }
 
     public List<Publication> getAllPublicationsByTags(List<TagDTO> tags) {
@@ -143,6 +160,23 @@ public class PublicationService {
             publication.set_draft(false);
             publicationRepository.save(publication);
         }
+
+        return publication;
+    }
+
+    public Publication createRevision(String text, String authorId, String comment, String publicationId){
+        Publication publication = null;
+
+        Optional<Publication> optionalPublication = publicationRepository.findById(UUID.fromString(publicationId));
+
+        if (optionalPublication.isPresent()) {
+            publication = optionalPublication.get();
+
+            List<Revision> revisions = publication.getRevisions();
+            User author = userService.getUserById(UUID.fromString(authorId));
+            Revision revisionToAdd = revisionService.createRevision(text, author, comment, publication);
+        }
+
         return publication;
     }
 
@@ -215,19 +249,17 @@ public class PublicationService {
         for (Publication publication : publications){
             if (publication.getTitle().contains(search) || publication.getSubtitle().contains(search) || publication.getContinuous_text().contains(search)){
                 result.add(publication);
-            } 
+            }
         }
         return result;
     }
 
     public List<Publication> getAllPublicationsByTrending() {
         List<Publication> all_publications = getAllPublications();
-        //List<Integer> scores = new ArrayList<>(all_publications.size());
         List<PublicationWrapper> scores = new ArrayList<>(all_publications.size());
         List<Publication> result = new ArrayList<>(all_publications.size());
 
         for (int i = 0; i < all_publications.size(); i++) {
-            //scores.add(calculatePublicationScore(all_publications.get(i)));
             Publication pub = all_publications.get(i);
             scores.add(i, new PublicationWrapper(pub,calculatePublicationScore(pub)));
         }
@@ -371,5 +403,10 @@ public class PublicationService {
         } else {
             return all_publications;
         }
+    }
+
+    public List<Revision> getAllReviewsByPublication(String publicationId) {
+        Publication publication = getPublicationById(UUID.fromString(publicationId));
+        return revisionService.getRevisionByPublication(publication);
     }
 }

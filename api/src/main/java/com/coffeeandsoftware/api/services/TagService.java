@@ -1,21 +1,26 @@
 package com.coffeeandsoftware.api.services;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.Optional;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
-import com.coffeeandsoftware.api.model.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import com.coffeeandsoftware.api.model.Tag;
 import com.coffeeandsoftware.api.dto.TagDTO;
 import com.coffeeandsoftware.api.repositories.TagRepository;
+import com.coffeeandsoftware.api.util.TagWrapper;
 
 @Service
 public class TagService {
     @Autowired
     TagRepository tagRepo;
+
+    @Autowired
+    PublicationService publicationService;
 
     public Tag createTag(TagDTO tagDTO) {
         Tag t = new Tag();
@@ -50,7 +55,6 @@ public class TagService {
         if (optionalTag.isPresent()) {
             t = optionalTag.get();
         }
-
         return t;
     }
 
@@ -61,5 +65,15 @@ public class TagService {
     public List<Tag> getAllTags() {
         return tagRepo.findAll();
     }
-    
+
+    public List<Tag> getAllTagsByTrending() {
+        List<Tag> tagList = getAllTags();
+        ArrayList<TagWrapper> scoredTags = new ArrayList<>(tagList.size());
+        for (Tag eachTag : tagList) {
+            scoredTags.add(new TagWrapper(eachTag, publicationService.calculateTagTrend(eachTag)));
+        }
+        return scoredTags.stream().sorted(Collections.reverseOrder())
+            .map(TagWrapper::getTag)
+            .collect(Collectors.toList());
+    }
 }
