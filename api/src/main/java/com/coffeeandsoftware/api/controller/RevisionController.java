@@ -4,9 +4,11 @@ import com.coffeeandsoftware.api.dto.PublicationDTO;
 import com.coffeeandsoftware.api.dto.ReturnDTO.PublicationReturnDTO;
 import com.coffeeandsoftware.api.dto.ReturnDTO.ReviewReturnDTO;
 import com.coffeeandsoftware.api.dto.ReviewDTO;
+import com.coffeeandsoftware.api.dto.ReviewUpdateDTO;
 import com.coffeeandsoftware.api.model.Publication;
 import com.coffeeandsoftware.api.model.Revision;
 import com.coffeeandsoftware.api.services.PublicationService;
+import com.coffeeandsoftware.api.services.RevisionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,9 @@ public class RevisionController {
 
     @Autowired
     PublicationService publicationService;
+
+    @Autowired
+    RevisionService revisionService;
 
     @PostMapping(("/{publicationId}"))
     public ResponseEntity<?> createReview(@RequestBody ReviewDTO reviewDTO, @PathVariable String publicationId) {
@@ -39,4 +44,18 @@ public class RevisionController {
 
         return new ResponseEntity<>(reviewReturnDTOS, HttpStatus.OK);
     }
+
+    @PatchMapping("/{reviewId}")
+    public ResponseEntity<?> updateReview(@RequestBody ReviewUpdateDTO reviewUpdateDTO, @PathVariable String reviewId) {
+        Revision revision = revisionService.updateReview(reviewId, reviewUpdateDTO.getReviewText());
+        return new ResponseEntity<>(new ReviewReturnDTO(revision), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity<?> deleteReview(@PathVariable String reviewId) {
+        revisionService.deleteReview(reviewId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
 }
