@@ -45,6 +45,7 @@ public class Publication implements Comparable<Publication>{
         inverseJoinColumns = @JoinColumn(name = "t_id")
     )
     private List<Tag> tags = new ArrayList<>();
+    private List<Revision> revisions = new ArrayList<>();
 
     @ManyToOne
     private User author;
