@@ -1,5 +1,6 @@
 package com.coffeeandsoftware.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -48,6 +49,7 @@ public class User {
     @CollectionTable(name  = "followers", joinColumns = @JoinColumn(name = "u_id"))
     private Set<UUID> followers = new HashSet<UUID>(); 
 
+    @JsonIgnore
     @OneToMany(mappedBy="author", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Denuncia> denuncia = new ArrayList<>();
 
