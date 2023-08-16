@@ -4,6 +4,7 @@ import com.coffeeandsoftware.api.dto.PublicationDTO;
 import com.coffeeandsoftware.api.dto.PublicationUpdateDTO;
 import com.coffeeandsoftware.api.dto.ReactionDTO;
 import com.coffeeandsoftware.api.dto.TagDTO;
+import com.coffeeandsoftware.api.model.Revision;
 import com.coffeeandsoftware.api.model.Publication;
 import com.coffeeandsoftware.api.model.Reaction;
 import com.coffeeandsoftware.api.model.Tag;
@@ -32,6 +33,9 @@ public class PublicationService {
 
     @Autowired
     ReactionService reactionService;
+
+    @Autowired
+    RevisionService revisionService;
 
     public Publication createPublication(PublicationDTO publicationDTO) {
         User author = userService.getUserById(UUID.fromString(publicationDTO.getAuthor_id()));
@@ -156,6 +160,23 @@ public class PublicationService {
             publication.set_draft(false);
             publicationRepository.save(publication);
         }
+
+        return publication;
+    }
+
+    public Publication createRevision(String text, String authorId, String comment, String publicationId){
+        Publication publication = null;
+
+        Optional<Publication> optionalPublication = publicationRepository.findById(UUID.fromString(publicationId));
+
+        if (optionalPublication.isPresent()) {
+            publication = optionalPublication.get();
+
+            List<Revision> revisions = publication.getRevisions();
+            User author = userService.getUserById(UUID.fromString(authorId));
+            Revision revisionToAdd = revisionService.createRevision(text, author, comment, publication);
+        }
+
         return publication;
     }
 
@@ -382,5 +403,10 @@ public class PublicationService {
         } else {
             return all_publications;
         }
+    }
+
+    public List<Revision> getAllReviewsByPublication(String publicationId) {
+        Publication publication = getPublicationById(UUID.fromString(publicationId));
+        return revisionService.getRevisionByPublication(publication);
     }
 }
