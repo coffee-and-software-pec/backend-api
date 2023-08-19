@@ -12,6 +12,7 @@ import com.coffeeandsoftware.api.services.RevisionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,12 +47,14 @@ public class RevisionController {
     }
 
     @PatchMapping("/{reviewId}")
+    @PreAuthorize("@reviewValidation.validateReview(authentication, #reviewId)")
     public ResponseEntity<?> updateReview(@RequestBody ReviewUpdateDTO reviewUpdateDTO, @PathVariable String reviewId) {
         Revision revision = revisionService.updateReview(reviewId, reviewUpdateDTO.getReviewText());
         return new ResponseEntity<>(new ReviewReturnDTO(revision), HttpStatus.OK);
     }
 
     @DeleteMapping("/{reviewId}")
+    @PreAuthorize("@reviewValidation.validateReview(authentication, #reviewId)")
     public ResponseEntity<?> deleteReview(@PathVariable String reviewId) {
         revisionService.deleteReview(reviewId);
         return new ResponseEntity<>(HttpStatus.OK);

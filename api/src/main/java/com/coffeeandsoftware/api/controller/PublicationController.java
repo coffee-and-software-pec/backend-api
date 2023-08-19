@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.coffeeandsoftware.api.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -107,12 +108,14 @@ public class PublicationController {
     }
 
     @PatchMapping("/{publicationId}/publish")
+    @PreAuthorize("@publicationValidation.validatePublication(authentication, #publicationId)")
     public ResponseEntity<?> publishPublicationById(@PathVariable String publicationId) {
         Publication publication = publicationService.publishPublication(publicationId);
         return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.OK);
     }
 
     @PatchMapping("/{publicationId}")
+    @PreAuthorize("@publicationValidation.validatePublication(authentication, #publicationId)")
     public ResponseEntity<?> updatePublicationById(@PathVariable String publicationId,
                                                    @RequestBody PublicationUpdateDTO publicationDTO) {
         Publication publication = publicationService.updatePublication(publicationId, publicationDTO);
@@ -120,6 +123,7 @@ public class PublicationController {
     }
 
     @DeleteMapping("/{publicationId}")
+    @PreAuthorize("@publicationValidation.validatePublication(authentication, #publicationId)")
     public ResponseEntity<?> deletePublicationById(@PathVariable String publicationId) {
         Publication publication = publicationService.deletePublication(publicationId);
         if (publication != null) {
@@ -130,12 +134,14 @@ public class PublicationController {
     }
 
     @PostMapping("/{publicationId}/react")
+    @PreAuthorize("@userValidation.validateAuthenticatedUserEmail(authentication, #reactionDTO.authorEmail)")
     public ResponseEntity<?> react(@PathVariable String publicationId, @RequestBody ReactionDTO reactionDTO) {
         Publication publication = publicationService.react(publicationId, reactionDTO);
         return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping("/{publicationId}/unreact")
+    @PreAuthorize("@userValidation.validateAuthenticatedUserEmail(authentication, #reactionDTO.authorEmail)")
     public ResponseEntity<?> unReact(@PathVariable String publicationId, @RequestBody ReactionDTO reactionDTO) {
         Publication publication = publicationService.unReact(publicationId, reactionDTO);
         return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.NO_CONTENT);
@@ -148,6 +154,7 @@ public class PublicationController {
     }
 
     @PatchMapping("/{publicationId}/insertTag")
+    @PreAuthorize("@publicationValidation.validatePublication(authentication, #publicationId)")
     public ResponseEntity<?> insertTagAtPublication(@PathVariable String publicationId,
                                                     @RequestBody TagDTO tagDTO) {
         Publication publication = publicationService.insertTagAtPublication(publicationId, tagDTO);
@@ -155,6 +162,7 @@ public class PublicationController {
     }
 
     @PatchMapping("/{publicationId}/removeTag")
+    @PreAuthorize("@publicationValidation.validatePublication(authentication, #publicationId)")
     public ResponseEntity<?> removeTagAtPublication(@PathVariable String publicationId,
                                                     @RequestBody TagDTO tagDTO) {
         Publication publication = publicationService.removeTagAtPublication(publicationId, tagDTO);
