@@ -30,7 +30,12 @@ public class WebSecurityConfig {
             "/review/**",
             "/tag",
             "/tag/**",
-            "/user/getByEmail/**"
+            "/user/getByEmail/**",
+            "/swagger-ui/**",
+            "/",
+            "/v3/api-docs/**",
+            "/favicon.ico",
+            "/actuator/**"
     };
 
     @Bean
