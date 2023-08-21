@@ -25,7 +25,7 @@ public class WebSecurityConfig {
     private static final String[] GET_WHITE_LIST = {
             "/publication/landingPublications",
             "/publication",
-            "/comment/byPublication",
+            "/comment/byPublication/**",
             "/publication/**",
             "/review/**",
             "/tag",
