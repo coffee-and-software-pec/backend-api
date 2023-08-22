@@ -68,4 +68,17 @@ public class DenunciaService {
 
         return denuncia;
     }
+
+    public boolean haveDenuncia(UUID userId, UUID publicationId){
+        Publication publi = publicationService.getPublicationById(publicationId);
+        User author = userService.getUserById(userId);
+
+        var d = denunciaRepository.findPreviousDenuncia(publi, author);
+
+        if (d.isEmpty()){
+            return false; 
+        }
+
+        return true;
+    } 
 }
