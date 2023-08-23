@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.coffeeandsoftware.api.dto.ReturnDTO.CommentReturnDTO;
+import com.coffeeandsoftware.api.util.CheckProfanity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +31,13 @@ public class CommentController {
     @Autowired
     CommentService commentService;
 
+    @Autowired
+    CheckProfanity checkProfanity;
+
     @PostMapping
     public ResponseEntity<?> createComment(@RequestBody CommentDTO commentDTO) {
+        ResponseEntity<?> profanityFilter = checkProfanity.checkProfanitiesRoutine(commentDTO.getC_text());
+        if (profanityFilter != null) return profanityFilter;
         Comment comment = commentService.createComment(commentDTO);
         return new ResponseEntity<>(new CommentReturnDTO(comment), HttpStatus.CREATED);
     }
@@ -82,6 +88,8 @@ public class CommentController {
     @PreAuthorize("@commentValidation.validateComment(authentication, #commentId)")
     public ResponseEntity<?> updateCommentById(@PathVariable String commentId,
                                                 @RequestBody CommentUpdateDTO commentUpdateDTO) {
+        ResponseEntity<?> profanityFilter = checkProfanity.checkProfanitiesRoutine(commentUpdateDTO.getText());
+        if (profanityFilter != null) return profanityFilter;
         Comment comment = commentService.updateComment(UUID.fromString(commentId), commentUpdateDTO);
         return new ResponseEntity<>(new CommentReturnDTO(comment), HttpStatus.OK);
     }

@@ -11,7 +11,12 @@ import com.coffeeandsoftware.api.model.Tag;
 import com.coffeeandsoftware.api.model.User;
 import com.coffeeandsoftware.api.repositories.PublicationRepository;
 import com.coffeeandsoftware.api.util.PublicationWrapper;
-
+import javax.net.ssl.HttpsURLConnection;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -62,6 +67,34 @@ public class PublicationService {
         publicationRepository.save(newPublication);
 
         return newPublication;
+    }
+
+    public String checkPublication(String text) throws IOException{
+        String url = "https://api.sightengine.com/1.0/text/check.json";
+        URL obj = new URL(url);
+        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+
+        //add request header
+        con.setRequestMethod("POST");
+
+        String urlParameters = "text="+text+"&lang=pt&opt_countries=us,gb,fr,br&mode=rules&api_user=737467689&api_secret=rxqYNGkcQY5c6HCM6Bjs";
+
+        con.setDoOutput(true);
+        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+        wr.writeBytes(urlParameters);
+        wr.flush();
+        wr.close();
+
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+        return response.toString();
     }
 
     public List<Publication> getAllPublications() {

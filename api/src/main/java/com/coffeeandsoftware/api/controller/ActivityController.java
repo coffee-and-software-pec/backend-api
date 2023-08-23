@@ -2,7 +2,6 @@ package com.coffeeandsoftware.api.controller;
 
 import com.coffeeandsoftware.api.dto.ReturnDTO.ActivityDTO;
 import com.coffeeandsoftware.api.services.ActivityService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

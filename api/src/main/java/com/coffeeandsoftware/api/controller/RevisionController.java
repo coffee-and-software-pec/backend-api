@@ -1,6 +1,5 @@
 package com.coffeeandsoftware.api.controller;
 
-import com.coffeeandsoftware.api.dto.PublicationDTO;
 import com.coffeeandsoftware.api.dto.ReturnDTO.PublicationReturnDTO;
 import com.coffeeandsoftware.api.dto.ReturnDTO.ReviewReturnDTO;
 import com.coffeeandsoftware.api.dto.ReviewDTO;

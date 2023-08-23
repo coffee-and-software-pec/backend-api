@@ -1,5 +1,6 @@
 package com.coffeeandsoftware.api.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -10,8 +11,10 @@ import com.coffeeandsoftware.api.dto.ReturnDTO.PublicationReturnDTO;
 import com.coffeeandsoftware.api.dto.TagDTO;
 import com.coffeeandsoftware.api.model.Publication;
 import com.coffeeandsoftware.api.services.PublicationService;
+import com.coffeeandsoftware.api.util.CheckProfanity;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.coffeeandsoftware.api.services.UserService;
+import com.coffeeandsoftware.api.util.ResponseParser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,8 +30,13 @@ public class PublicationController {
     @Autowired
     PublicationService publicationService;
 
+    @Autowired
+    CheckProfanity checkProfanity;
+
     @PostMapping
     public ResponseEntity<?> createPublication(@RequestBody PublicationDTO publicationDTO) {
+        ResponseEntity<?> profanityFilter = checkProfanity.checkProfanitiesRoutine(publicationDTO.getContinuous_text());
+        if (profanityFilter != null) return profanityFilter;
         var publication = publicationService.createPublication(publicationDTO);
         return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.CREATED);
     }
@@ -118,6 +126,8 @@ public class PublicationController {
     @PreAuthorize("@publicationValidation.validatePublication(authentication, #publicationId)")
     public ResponseEntity<?> updatePublicationById(@PathVariable String publicationId,
                                                    @RequestBody PublicationUpdateDTO publicationDTO) {
+        ResponseEntity<?> profanityFilter = checkProfanity.checkProfanitiesRoutine(publicationDTO.getContinuous_text());
+        if (profanityFilter != null) return profanityFilter;
         Publication publication = publicationService.updatePublication(publicationId, publicationDTO);
         return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.OK);
     }
@@ -168,6 +178,5 @@ public class PublicationController {
         Publication publication = publicationService.removeTagAtPublication(publicationId, tagDTO);
         return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.NO_CONTENT);
     }
-
 
 }
