@@ -11,6 +11,7 @@ import com.coffeeandsoftware.api.dto.ReturnDTO.PublicationReturnDTO;
 import com.coffeeandsoftware.api.dto.TagDTO;
 import com.coffeeandsoftware.api.model.Publication;
 import com.coffeeandsoftware.api.services.PublicationService;
+import com.coffeeandsoftware.api.util.CheckProfanity;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.coffeeandsoftware.api.services.UserService;
 import com.coffeeandsoftware.api.util.ResponseParser;
@@ -29,11 +30,14 @@ public class PublicationController {
     @Autowired
     PublicationService publicationService;
 
+    @Autowired
+    CheckProfanity checkProfanity;
+
     @PostMapping
     public ResponseEntity<?> createPublication(@RequestBody PublicationDTO publicationDTO) {
-        var publication = publicationService.createPublication(publicationDTO);
-        ResponseEntity<?> profanityFilter = checkProfanitiesRoutine(publication.getContinuous_text());
+        ResponseEntity<?> profanityFilter = checkProfanity.checkProfanitiesRoutine(publicationDTO.getContinuous_text());
         if (profanityFilter != null) return profanityFilter;
+        var publication = publicationService.createPublication(publicationDTO);
         return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.CREATED);
     }
 
@@ -115,8 +119,6 @@ public class PublicationController {
     @PreAuthorize("@publicationValidation.validatePublication(authentication, #publicationId)")
     public ResponseEntity<?> publishPublicationById(@PathVariable String publicationId) {
         Publication publication = publicationService.publishPublication(publicationId);
-        ResponseEntity<?> profanityFilter = checkProfanitiesRoutine(publication.getContinuous_text());
-        if (profanityFilter != null) return profanityFilter;
         return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.OK);
     }
 
@@ -124,9 +126,9 @@ public class PublicationController {
     @PreAuthorize("@publicationValidation.validatePublication(authentication, #publicationId)")
     public ResponseEntity<?> updatePublicationById(@PathVariable String publicationId,
                                                    @RequestBody PublicationUpdateDTO publicationDTO) {
-        Publication publication = publicationService.updatePublication(publicationId, publicationDTO);
-        ResponseEntity<?> profanityFilter = checkProfanitiesRoutine(publication.getContinuous_text());
+        ResponseEntity<?> profanityFilter = checkProfanity.checkProfanitiesRoutine(publicationDTO.getContinuous_text());
         if (profanityFilter != null) return profanityFilter;
+        Publication publication = publicationService.updatePublication(publicationId, publicationDTO);
         return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.OK);
     }
 
@@ -175,17 +177,6 @@ public class PublicationController {
                                                     @RequestBody TagDTO tagDTO) {
         Publication publication = publicationService.removeTagAtPublication(publicationId, tagDTO);
         return new ResponseEntity<>(new PublicationReturnDTO(publication), HttpStatus.NO_CONTENT);
-    }
-
-    private ResponseEntity<?> checkProfanitiesRoutine(String text) {
-        try {
-            String response = publicationService.checkPublication(text);
-            if (ResponseParser.hasProfanities(response)) {
-                return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
-            } return null;
-        } catch (IOException e) {
-            return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
-        }
     }
 
 }
