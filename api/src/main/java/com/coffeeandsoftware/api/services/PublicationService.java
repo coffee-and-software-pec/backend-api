@@ -244,10 +244,15 @@ public class PublicationService {
     }
 
     public List<Publication> getAllPublicationsBySearch(String search) {
+
+        String sanitizedSearchText = search.toLowerCase();
+
         List<Publication> publications = getAllPublications();
         ArrayList<Publication> result = new ArrayList<>();
         for (Publication publication : publications){
-            if (publication.getTitle().contains(search) || publication.getSubtitle().contains(search) || publication.getContinuous_text().contains(search)){
+            if (publication.getTitle().toLowerCase().contains(sanitizedSearchText) ||
+                publication.getSubtitle().contains(sanitizedSearchText) ||
+                publication.getContinuous_text().contains(sanitizedSearchText)){
                 result.add(publication);
             }
         }
