@@ -2,7 +2,6 @@ package com.coffeeandsoftware.api.repositories;
 
 import com.coffeeandsoftware.api.model.Publication;
 import com.coffeeandsoftware.api.model.User;
-import com.coffeeandsoftware.api.model.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

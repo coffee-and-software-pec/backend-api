@@ -2,7 +2,6 @@ package com.coffeeandsoftware.api.dto.ReturnDTO;
 
 import com.coffeeandsoftware.api.dto.ReactionDTO;
 import com.coffeeandsoftware.api.model.Publication;
-import com.coffeeandsoftware.api.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
