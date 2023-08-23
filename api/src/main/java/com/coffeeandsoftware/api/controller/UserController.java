@@ -8,6 +8,7 @@ import com.coffeeandsoftware.api.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
@@ -30,6 +31,7 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
+    @PreAuthorize("@userValidation.validateAuthenticatedUserId(authentication, #userId)")
     public ResponseEntity<?> updateUser(@PathVariable String userId, @RequestBody UserDTO userDTO) {
         try {
             User user = userService.updateUser(userId, userDTO);
@@ -80,14 +82,14 @@ public class UserController {
         }
     }
     
-    @GetMapping("/stats/{userId}")
-    public ResponseEntity<?> getUserStatsById(@PathVariable String userId, @RequestHeader("REQUEST_USER_ID") String requestUserId) {
+    @GetMapping("/stats/{userId}/{requestUserId}")
+    public ResponseEntity<?> getUserStatsById(@PathVariable String userId, @PathVariable String requestUserId) {
         UserStatsDTO userStatsDTO = userService.getUserStatsById(userId, requestUserId);
         return new ResponseEntity<>(userStatsDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/stats")
-    public ResponseEntity<?> getUserStats(@RequestHeader("REQUEST_USER_ID") String requestUserId) {
+    @GetMapping("/stats/{requestUserId}")
+    public ResponseEntity<?> getUserStats(@PathVariable String requestUserId) {
         List<UserStatsDTO> userStatsDTOList = userService.getUsersStats(requestUserId);
         return new ResponseEntity<>(userStatsDTOList, HttpStatus.OK);
 

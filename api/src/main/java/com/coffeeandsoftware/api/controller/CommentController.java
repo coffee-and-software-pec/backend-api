@@ -7,6 +7,7 @@ import com.coffeeandsoftware.api.dto.ReturnDTO.CommentReturnDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.coffeeandsoftware.api.dto.CommentDTO;
 import com.coffeeandsoftware.api.dto.CommentUpdateDTO;
@@ -78,6 +79,7 @@ public class CommentController {
     }
 
     @PatchMapping("/{commentId}")
+    @PreAuthorize("@commentValidation.validateComment(authentication, #commentId)")
     public ResponseEntity<?> updateCommentById(@PathVariable String commentId,
                                                 @RequestBody CommentUpdateDTO commentUpdateDTO) {
         Comment comment = commentService.updateComment(UUID.fromString(commentId), commentUpdateDTO);
@@ -85,6 +87,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
+    @PreAuthorize("@commentValidation.validateComment(authentication, #commentId)")
     public ResponseEntity<?> deleteCommentById(@PathVariable String commentId) {
         Comment comment = commentService.deleteComment(UUID.fromString(commentId));
         if (comment != null) {

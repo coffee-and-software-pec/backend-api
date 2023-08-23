@@ -38,6 +38,11 @@ public class DenunciaController{
     public ResponseEntity<?> getById(@PathVariable String denunciaId){
         return new ResponseEntity<>(denunciaService.getById(UUID.fromString(denunciaId)), HttpStatus.OK);
     }
+
+    @GetMapping("/{userId}/{publicationId}")
+    public ResponseEntity<?> haveDenuncia(@PathVariable String userId, @PathVariable String publicationId){
+        return new ResponseEntity<>(denunciaService.haveDenuncia(UUID.fromString(userId), UUID.fromString(publicationId)), HttpStatus.OK);
+    }
     
     @DeleteMapping("/{denunciaId}")
     public ResponseEntity<?> deleteById(@PathVariable String denunciaId){

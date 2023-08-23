@@ -4,6 +4,7 @@ import com.coffeeandsoftware.api.dto.PublicationDTO;
 import com.coffeeandsoftware.api.dto.PublicationUpdateDTO;
 import com.coffeeandsoftware.api.dto.ReactionDTO;
 import com.coffeeandsoftware.api.dto.TagDTO;
+import com.coffeeandsoftware.api.model.Revision;
 import com.coffeeandsoftware.api.model.Publication;
 import com.coffeeandsoftware.api.model.Reaction;
 import com.coffeeandsoftware.api.model.Tag;
@@ -33,6 +34,9 @@ public class PublicationService {
     @Autowired
     ReactionService reactionService;
 
+    @Autowired
+    RevisionService revisionService;
+
     public Publication createPublication(PublicationDTO publicationDTO) {
         User author = userService.getUserById(UUID.fromString(publicationDTO.getAuthor_id()));
 
@@ -58,6 +62,41 @@ public class PublicationService {
         publicationRepository.save(newPublication);
 
         return newPublication;
+    }
+
+    public void checkPublication(String text) throws IOException{
+        String url = "https://api.sightengine.com/1.0/text/check.json";
+        URL obj = new URL(url);
+        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+
+        //add request header
+        con.setRequestMethod("POST");
+
+        String urlParameters = "text="+text+"&lang=pt&opt_countries=us,gb,fr,br&mode=rules&api_user=737467689&api_secret=rxqYNGkcQY5c6HCM6Bjs";
+
+        con.setDoOutput(true);
+        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+        wr.writeBytes(urlParameters);
+        wr.flush();
+        wr.close();
+
+        //int responseCode = con.getResponseCode();
+        //System.out.println("\nSending 'POST' request to URL : " + url);
+        //System.out.println("Post parameters : " + urlParameters);
+        //System.out.println("Response Code : " + responseCode);
+
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        //print result
+        //System.out.println(response.toString());
     }
 
     public List<Publication> getAllPublications() {
@@ -156,6 +195,23 @@ public class PublicationService {
             publication.set_draft(false);
             publicationRepository.save(publication);
         }
+
+        return publication;
+    }
+
+    public Publication createRevision(String text, String authorId, String comment, String publicationId){
+        Publication publication = null;
+
+        Optional<Publication> optionalPublication = publicationRepository.findById(UUID.fromString(publicationId));
+
+        if (optionalPublication.isPresent()) {
+            publication = optionalPublication.get();
+
+            List<Revision> revisions = publication.getRevisions();
+            User author = userService.getUserById(UUID.fromString(authorId));
+            Revision revisionToAdd = revisionService.createRevision(text, author, comment, publication);
+        }
+
         return publication;
     }
 
@@ -223,10 +279,15 @@ public class PublicationService {
     }
 
     public List<Publication> getAllPublicationsBySearch(String search) {
+
+        String sanitizedSearchText = search.toLowerCase();
+
         List<Publication> publications = getAllPublications();
         ArrayList<Publication> result = new ArrayList<>();
         for (Publication publication : publications){
-            if (publication.getTitle().contains(search) || publication.getSubtitle().contains(search) || publication.getContinuous_text().contains(search)){
+            if (publication.getTitle().toLowerCase().contains(sanitizedSearchText) ||
+                publication.getSubtitle().contains(sanitizedSearchText) ||
+                publication.getContinuous_text().contains(sanitizedSearchText)){
                 result.add(publication);
             }
         }
@@ -382,5 +443,10 @@ public class PublicationService {
         } else {
             return all_publications;
         }
+    }
+
+    public List<Revision> getAllReviewsByPublication(String publicationId) {
+        Publication publication = getPublicationById(UUID.fromString(publicationId));
+        return revisionService.getRevisionByPublication(publication);
     }
 }
