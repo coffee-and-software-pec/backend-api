@@ -1,13 +1,9 @@
 package com.coffeeandsoftware.api.dto.ReturnDTO;
 
-import com.coffeeandsoftware.api.dto.UserDTO;
 import com.coffeeandsoftware.api.model.Revision;
-import com.coffeeandsoftware.api.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import java.util.UUID;
 

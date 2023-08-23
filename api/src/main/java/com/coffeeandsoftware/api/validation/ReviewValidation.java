@@ -1,6 +1,5 @@
 package com.coffeeandsoftware.api.validation;
 
-import com.coffeeandsoftware.api.repositories.PublicationRepository;
 import com.coffeeandsoftware.api.repositories.RevisionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

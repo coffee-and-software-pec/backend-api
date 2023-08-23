@@ -1,10 +1,8 @@
 package com.coffeeandsoftware.api.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import org.hibernate.annotations.GenericGenerator;

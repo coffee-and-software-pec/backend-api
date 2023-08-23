@@ -5,14 +5,10 @@ import com.coffeeandsoftware.api.dto.ReturnDTO.ActivityType;
 import com.coffeeandsoftware.api.model.Comment;
 import com.coffeeandsoftware.api.model.Publication;
 import com.coffeeandsoftware.api.model.Reaction;
-import com.coffeeandsoftware.api.model.User;
-import com.coffeeandsoftware.api.repositories.PublicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class ActivityService {

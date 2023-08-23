@@ -1,7 +1,6 @@
 package com.coffeeandsoftware.api.validation;
 
 import com.coffeeandsoftware.api.repositories.PublicationRepository;
-import com.coffeeandsoftware.api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
